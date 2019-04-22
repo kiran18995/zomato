@@ -26,7 +26,7 @@ public class RestaurantPageKeyedDataSource extends PageKeyedDataSource<Integer, 
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
-        restaurantService.getRestaurants(FIRST_PAGE).enqueue(new Callback<RestaurantResponse>() {
+        restaurantService.getRestaurants().enqueue(new Callback<RestaurantResponse>() {
             @Override
             public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
                 if (response.isSuccessful()) {
@@ -50,7 +50,7 @@ public class RestaurantPageKeyedDataSource extends PageKeyedDataSource<Integer, 
 
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
-        restaurantService.getRestaurants(params.key).enqueue(new Callback<RestaurantResponse>() {
+        restaurantService.getRestaurants().enqueue(new Callback<RestaurantResponse>() {
             @Override
             public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
                 if (response.isSuccessful()) {

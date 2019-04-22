@@ -7,7 +7,8 @@ public class ApiClient {
     private static Retrofit retrofit;
     private static RestaurantService sInstance;
     private static final Object sLock = new Object();
-    private static final String BASE_URL = "https://developers.zomato.com/api/v2.1/";
+    //private static final String BASE_URL = "https://developers.zomato.com/api/v2.1/";
+    private static final String BASE_URL = "https://gitlab.com/saurav053/zomato_api/raw/master/";
 
 
     public static RestaurantService getInstance() {
