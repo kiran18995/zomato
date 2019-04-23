@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/locationSurface"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="1dp"
+                android:src="@drawable/location" />
+
+            <TextView
+                android:fontFamily="@font/circular_book"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="YOUR LOCATION"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:fontFamily="@font/circular_book"
+            android:text="Home - Phase 1, JP Nagar"
+            android:textSize="16sp"
+            android:textColor="#1C1C1C"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:fontFamily="@font/circular_book"
+            android:textSize="12sp"
+            android:text="975, 3rd floor, Dandi Nilaya, 12A cross, Jp Nagar phase 1"
+            android:maxLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:background="@drawable/dotted_line"
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical|right"
+        android:src="@drawable/bookmark" />
+
+</LinearLayout>
