@@ -68,7 +68,11 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Co
 
     @Override
     public int getItemCount() {
-        return collectionList.size();
+        if (collectionList.size() > 0) {
+            return collectionList.size();
+        } else {
+            return 0;
+        }
     }
 
     public class CollectionViewHolder extends RecyclerView.ViewHolder {

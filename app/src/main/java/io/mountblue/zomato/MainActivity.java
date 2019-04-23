@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -30,9 +27,7 @@ import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
-import io.mountblue.zomato.view.Injection;
-import io.mountblue.zomato.view.RestaurantViewModel;
-import io.mountblue.zomato.view.ViewModelFactory;
+import io.mountblue.zomato.data.remote.RestaurantViewModel;
 import io.mountblue.zomato.view.gooutfragment.GoOutFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.frameLayout)
     FrameLayout frameLayout;
 
+    private PagedList<Restaurant> restaurantPagedList;
+    private RestaurantViewModel restaurantViewModel;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -53,20 +51,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
                     restaurantRecyclerView.setVisibility(View.VISIBLE);
                     frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
-                    Fragment fragment = new GoOutFragment();
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.frameLayout, fragment)
-                            .commit();
                     restaurantRecyclerView.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_notifications:
+                    restaurantRecyclerView.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.GONE);
                     return true;
             }
             return false;
@@ -83,42 +77,35 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
         restaurantRecyclerView.smoothScrollToPosition(1);
-        // mTextMessage = findViewById(R.id.message);
-//        restaurantViewModel = obtainViewModel(MainActivity.this);
-//        restaurantViewModel.getPagedList().observe(this, new Observer<PagedList<Restaurant>>() {
-//            @Override
-//            public void onChanged(PagedList<Restaurant> restaurants) {
-//                Log.e(TAG, "onChanged: ");
-//            }
-//        });
+        restaurantViewModel = new RestaurantViewModel();
 
-        RestaurantService apiService =
-                ApiClient.getRetrofitInstance().create(RestaurantService.class);
-        apiService.getRestaurants().enqueue(new Callback<RestaurantResponse>() {
+        restaurantViewModel.getPagedList().observe(this, new Observer<PagedList<Restaurant>>() {
             @Override
-            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.e(TAG, "onResponse: hi" + response.body().getResultsFound());
-                    Log.e(TAG, "onResponse: " + response.body().getRestaurants().size());
-                    RestaurantAdapter restaurantAdapter = new RestaurantAdapter(MainActivity.this);
-                    restaurantAdapter.setRestaurantList(response.body().getRestaurants());
-                    restaurantRecyclerView.setAdapter(restaurantAdapter);
-                } else {
-                    Log.e(TAG, "onResponse: Error ");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
+            public void onChanged(PagedList<Restaurant> restaurants) {
+                restaurantPagedList = restaurants;
+                setRecyclerView();
             }
         });
+
+        frameLayout.setVisibility(View.GONE);
+        showFragment();
+
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    public RestaurantViewModel obtainViewModel(Activity activity) {
-        ViewModelFactory factory = Injection.provideViewModelFactory(activity);
-        return ViewModelProviders.of(this, factory).get(RestaurantViewModel.class);
+    private void showFragment() {
+        Fragment fragment = new GoOutFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment)
+                .commit();
+    }
+
+    private void setRecyclerView() {
+        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(MainActivity.this);
+        restaurantAdapter.submitList(restaurantPagedList);
+        restaurantRecyclerView.setAdapter(restaurantAdapter);
+        restaurantAdapter.notifyDataSetChanged();
     }
 
 }

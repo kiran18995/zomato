@@ -1,27 +1,44 @@
 package io.mountblue.zomato.data;
 
-import io.mountblue.zomato.data.remote.DataSource;
-import io.mountblue.zomato.data.remote.RestaurantRemoteDataSource;
+import android.util.Log;
 
-public class RestaurantRepository implements DataSource {
+import androidx.lifecycle.MutableLiveData;
 
-    private static volatile RestaurantRepository sInstance;
+import java.util.List;
 
-    private final RestaurantRemoteDataSource mRemoteDataSource;
+import io.mountblue.zomato.data.remote.retrofit.ApiClient;
+import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
+import io.mountblue.zomato.module.gooutmodule.Collection;
+import io.mountblue.zomato.module.gooutmodule.Collections;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    public RestaurantRepository(RestaurantRemoteDataSource mRemoteDataSource) {
-        this.mRemoteDataSource = mRemoteDataSource;
+public class RestaurantRepository {
+    private static final String TAG = "RestaurantRepository";
+    private MutableLiveData<List<Collection>> mutableLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<List<Collection>> getMutableLiveData() {
+        RestaurantService apiService = ApiClient.getRetrofitInstanceByGit().create(RestaurantService.class);
+
+        apiService.getCollections().enqueue(new Callback<Collections>() {
+            @Override
+            public void onResponse(Call<Collections> call, Response<Collections> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.e(TAG, "onResponse: " + response.body().getCollections().size());
+                    mutableLiveData.setValue(response.body().getCollections());
+                } else {
+                    Log.e(TAG, "onResponse: Error ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Collections> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+        return mutableLiveData;
     }
 
-    public static RestaurantRepository getInstance(RestaurantRemoteDataSource restaurantRemoteDataSource) {
-        if (sInstance == null) {
-            sInstance = new RestaurantRepository(restaurantRemoteDataSource);
-        }
-        return sInstance;
-    }
 
-    @Override
-    public RepoRestaurantResult loadRestaurants() {
-        return mRemoteDataSource.loadRestaurants();
-    }
 }

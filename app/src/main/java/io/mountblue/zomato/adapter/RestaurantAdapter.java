@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedList;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -20,23 +22,24 @@ import io.mountblue.zomato.RoundedTransformation;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.module.Restaurant;
 
-public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder> {
+public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAdapter.RestaurantViewHolder> {
 
     private static final String TAG = "RestaurantAdapter";
-    private List<Restaurant> restaurantList;
+    // private List<Restaurant> restaurantList;
     private Context context;
 
     public RestaurantAdapter(Context context) {
+        super(Restaurant.CALLBACK);
         this.context = context;
     }
 
-    public List<Restaurant> getRestaurantList() {
+   /* public List<Restaurant> getRestaurantList() {
         return restaurantList;
     }
 
     public void setRestaurantList(List<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
-    }
+    }*/
 
     @NonNull
     @Override
@@ -47,26 +50,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
-        holder.restaurantName.setText(restaurantList.get(position).getRestaurant().getName());
-        holder.foodType.setText(restaurantList.get(position).getRestaurant().getCuisines());
-        if (!restaurantList.get(position).getRestaurant().getThumb().isEmpty()) {
+        holder.restaurantName.setText(getItem(position).getRestaurant().getName());
+        holder.foodType.setText(getItem(position).getRestaurant().getCuisines());
+        if (!getItem(position).getRestaurant().getThumb().isEmpty()) {
             //Log.e(TAG, "onBindViewHolder: " + restaurantList.get(position).getRestaurant().getPhotosUrl());
-            Picasso.with(context).load(restaurantList.get(position).getRestaurant().getThumb())
+            Picasso.with(context).load(getItem(position).getRestaurant().getThumb())
                     .placeholder(R.drawable.food_placeholder)
-                    .transform(new RoundedTransformation(10,0))
+                    .transform(new RoundedTransformation(10, 0))
                     .fit().centerCrop()
                     .into(holder.restaurantImage);
         }
-        holder.restaurantRating.setText(restaurantList.get(position).getRestaurant().getUserRating().getAggregateRating());
-        if (restaurantList.get(position).getRestaurant().getAverageCostForTwo() != null) {
-            holder.restaurantRate.setText(restaurantList.get(position).getRestaurant().getAverageCostForTwo().toString());
+        holder.restaurantRating.setText(getItem(position).getRestaurant().getUserRating().getAggregateRating());
+        if (getItem(position).getRestaurant().getAverageCostForTwo() != null) {
+            holder.restaurantRate.setText(getItem(position).getRestaurant().getAverageCostForTwo().toString());
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return restaurantList.size();
-    }
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
