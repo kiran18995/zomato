@@ -8,9 +8,12 @@ import androidx.paging.PageKeyedDataSource;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restaurant> {
 
@@ -28,21 +31,30 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
 
-        restaurantService.getRestaurants(FIRST_PAGE).enqueue(new Callback<RestaurantResponse>() {
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurants(FIRST_PAGE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
             @Override
-            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onResult(response.body().getRestaurants(), null, FIRST_PAGE + 1);
-                } else {
-                    Log.e(TAG, "onResponse: error");
-                }
+            public void onSubscribe(Disposable d) {
+
             }
 
             @Override
-            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
+            public void onNext(RestaurantResponse restaurantResponse) {
+                callback.onResult(restaurantResponse.getRestaurants(), null, FIRST_PAGE + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onResponse: error" + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
             }
         });
+
     }
 
     @Override
@@ -52,21 +64,31 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
 
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
-        restaurantService.getRestaurants((params.key + 20)).enqueue(new Callback<RestaurantResponse>() {
+
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurants((params.key + 20))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
             @Override
-            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
-                if (response.isSuccessful()) {
-                    callback.onResult(response.body().getRestaurants(), (params.key + 20));
-                    Log.e(TAG, "onResponse: " + (params.key + 20));
-                } else {
-                    Log.e(TAG, "onResponse: error");
-                }
+            public void onSubscribe(Disposable d) {
+
             }
 
             @Override
-            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
+            public void onNext(RestaurantResponse restaurantResponse) {
+                callback.onResult(restaurantResponse.getRestaurants(), (params.key + 20));
+                Log.e(TAG, "onResponse: " + (params.key + 20));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onResponse: error" + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
             }
         });
+
     }
 }
