@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
@@ -28,6 +33,7 @@ import io.mountblue.zomato.module.RestaurantResponse;
 import io.mountblue.zomato.view.Injection;
 import io.mountblue.zomato.view.RestaurantViewModel;
 import io.mountblue.zomato.view.ViewModelFactory;
+import io.mountblue.zomato.view.gooutfragment.GoOutFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     //private RestaurantViewModel restaurantViewModel;
     @BindView(R.id.restaurantList)
     RecyclerView restaurantRecyclerView;
+    @BindView(R.id.frameLayout)
+    FrameLayout frameLayout;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -45,13 +53,20 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    //  mTextMessage.setText(R.string.title_home);
+
+                    restaurantRecyclerView.setVisibility(View.VISIBLE);
+                    frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
-                    //  mTextMessage.setText(R.string.title_dashboard);
+                    Fragment fragment = new GoOutFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frameLayout, fragment)
+                            .commit();
+                    restaurantRecyclerView.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_notifications:
-                    // mTextMessage.setText(R.string.title_notifications);
                     return true;
             }
             return false;

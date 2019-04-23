@@ -3,6 +3,7 @@ package io.mountblue.zomato.data.remote.retrofit;
 import java.util.List;
 
 import io.mountblue.zomato.module.RestaurantResponse;
+import io.mountblue.zomato.module.gooutmodule.Collections;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -16,4 +17,7 @@ public interface RestaurantService {
 
     @GET("restaurant.json")
     Call<RestaurantResponse> getRestaurants();
+
+    @GET("collection.json")
+    Call<Collections> getCollections();
 }
