@@ -1,7 +1,6 @@
 package io.mountblue.zomato.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.mountblue.zomato.RoundedTransformation;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.module.Restaurant;
 
@@ -52,6 +52,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         if (!restaurantList.get(position).getRestaurant().getThumb().isEmpty()) {
             //Log.e(TAG, "onBindViewHolder: " + restaurantList.get(position).getRestaurant().getPhotosUrl());
             Picasso.with(context).load(restaurantList.get(position).getRestaurant().getThumb())
+                    .placeholder(R.drawable.food_placeholder)
+                    .transform(new RoundedTransformation(10,0))
+                    .fit().centerCrop()
                     .into(holder.restaurantImage);
         }
         holder.restaurantRating.setText(restaurantList.get(position).getRestaurant().getUserRating().getAggregateRating());
