@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="navTextStyle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/circular_medium</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
 </resources>
