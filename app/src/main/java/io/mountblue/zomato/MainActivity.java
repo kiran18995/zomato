@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     TextView deliveryAddress;
     @BindView(R.id.address_heading)
     TextView addressHeading;
+    @BindView(R.id.layout_search)
+    LinearLayout layoutSearch;
+    @BindView(R.id.layout_location)
+    LinearLayout layoutLocation;
 
     private PagedList<Restaurant> restaurantPagedList;
 
@@ -49,14 +54,21 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     restaurantRecyclerView.setVisibility(View.VISIBLE);
+                    layoutSearch.setVisibility(View.VISIBLE);layoutSearch.setVisibility(View.VISIBLE);
+                    layoutLocation.setVisibility(View.VISIBLE);
+                    layoutLocation.setVisibility(View.VISIBLE);
                     frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
                     restaurantRecyclerView.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.VISIBLE);
+                    layoutSearch.setVisibility(View.GONE);
+                    layoutLocation.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_notifications:
                     restaurantRecyclerView.setVisibility(View.GONE);
+                    layoutSearch.setVisibility(View.GONE);
+                    layoutLocation.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_search:
