@@ -51,7 +51,7 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
         holder.restaurantName.setText(getItem(position).getRestaurant().getName());
-        holder.foodType.setText(getItem(position).getRestaurant().getCuisines());
+        holder.foodType.setText(String.format("%s Places", getItem(position).getRestaurant().getCuisines()));
         if (!getItem(position).getRestaurant().getThumb().isEmpty()) {
             //Log.e(TAG, "onBindViewHolder: " + restaurantList.get(position).getRestaurant().getPhotosUrl());
             Picasso.with(context).load(getItem(position).getRestaurant().getThumb())

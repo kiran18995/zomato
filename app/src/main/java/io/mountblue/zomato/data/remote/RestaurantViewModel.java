@@ -8,6 +8,8 @@ import androidx.paging.PagedList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+
 import io.mountblue.zomato.data.remote.pagination.RestaurantDataSource;
 import io.mountblue.zomato.data.remote.pagination.RestaurantDataSourceFactory;
 import io.mountblue.zomato.data.remote.retrofit.ApiClient;
@@ -20,6 +22,7 @@ public class RestaurantViewModel extends ViewModel {
     private LiveData<RestaurantDataSource> restaurantDataSourceLiveData;
     private Executor executor;
 
+    @Inject
     public RestaurantViewModel() {
         RestaurantService apiService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
 

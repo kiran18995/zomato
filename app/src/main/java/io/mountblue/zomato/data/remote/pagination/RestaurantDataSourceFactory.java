@@ -14,7 +14,6 @@ public class RestaurantDataSourceFactory extends DataSource.Factory {
 
     public RestaurantDataSourceFactory(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
-
         mutableLiveData = new MutableLiveData<>();
 
     }

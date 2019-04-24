@@ -35,13 +35,13 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    //private RestaurantViewModel restaurantViewModel;
     @BindView(R.id.restaurantList)
     RecyclerView restaurantRecyclerView;
     @BindView(R.id.frameLayout)
     FrameLayout frameLayout;
 
     private PagedList<Restaurant> restaurantPagedList;
+
     private RestaurantViewModel restaurantViewModel;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

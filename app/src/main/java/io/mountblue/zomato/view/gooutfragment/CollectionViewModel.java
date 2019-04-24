@@ -11,6 +11,7 @@ import io.mountblue.zomato.module.gooutmodule.Collection;
 public class CollectionViewModel extends ViewModel {
     private RestaurantRepository restaurantRepository;
 
+
     public CollectionViewModel() {
         restaurantRepository = new RestaurantRepository();
     }
