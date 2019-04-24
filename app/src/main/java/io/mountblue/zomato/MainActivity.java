@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     restaurantRecyclerView.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.GONE);
                     return true;
+                case R.id.navigation_search:
+                    return true;
             }
             return false;
         }
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setItemIconTintList(null);
         ButterKnife.bind(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
