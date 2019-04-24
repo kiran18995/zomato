@@ -1,12 +1,5 @@
 package io.mountblue.zomato;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,8 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,10 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private PagedList<Restaurant> restaurantPagedList;
 
     private RestaurantViewModel restaurantViewModel;
-    public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 100;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -106,7 +92,15 @@ public class MainActivity extends AppCompatActivity {
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        getCurrentLocation();
+        setCurrentAddress();
+    }
+
+    private void setCurrentAddress() {
+        CurrentLocation currentLocation = new CurrentLocation(this);
+        deliveryAddress.setText(currentLocation.getCurrentAddress());
+        String[] locality = currentLocation.getCurrentAddress().split(",");
+        String street = locality[2]+", "+locality[3];
+        addressHeading.setText(street.trim());
     }
 
     private void showFragment() {
@@ -123,78 +117,4 @@ public class MainActivity extends AppCompatActivity {
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         restaurantAdapter.notifyDataSetChanged();
     }
-
-    private Location getLastBestLocation() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            int accessCoarsePermission
-                    = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-            int accessFinePermission
-                    = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-
-            if (accessCoarsePermission != PackageManager.PERMISSION_GRANTED
-                    || accessFinePermission != PackageManager.PERMISSION_GRANTED) {
-                String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION};
-                ActivityCompat.requestPermissions(this, permissions,
-                        REQUEST_ID_ACCESS_COURSE_FINE_LOCATION);
-
-            }
-        }
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Location locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Location locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        long GPSLocationTime = 0;
-        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
-
-        long NetLocationTime = 0;
-
-        if (null != locationNet) {
-            NetLocationTime = locationNet.getTime();
-        }
-
-        if ( 0 < GPSLocationTime - NetLocationTime ) {
-            return locationGPS;
-        }
-        else {
-            return locationNet;
-        }
-    }
-
-    private void getCurrentLocation() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    double longitude = getLastBestLocation().getLongitude();
-                    double latitude = getLastBestLocation().getLatitude();
-                    setAddress(latitude,longitude);
-                    Log.e("myLocation",latitude+","+longitude);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public void setAddress(double latitude, double longitude) {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this);
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 5);
-            String address = addresses.get(0).getAddressLine(0);
-            deliveryAddress.setText(address);
-            String[] locality = address.split(",");
-            String headingAddress = locality[2]+","+locality[3];
-            addressHeading.setText(headingAddress.trim());
-            Log.e(TAG, "setAddress: "+ locality[2]+","+locality[3]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
 }
