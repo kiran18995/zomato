@@ -12,7 +12,7 @@
         android:src="@drawable/food_placeholder" />
 
     <View
-        android:alpha="0.4"
+        android:alpha="0.6"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradiant_for_collection">

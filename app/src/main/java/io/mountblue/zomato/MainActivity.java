@@ -1,14 +1,19 @@
 package io.mountblue.zomato;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -54,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     restaurantRecyclerView.setVisibility(View.VISIBLE);
-                    layoutSearch.setVisibility(View.VISIBLE);layoutSearch.setVisibility(View.VISIBLE);
+                    layoutSearch.setVisibility(View.VISIBLE);
+                    layoutSearch.setVisibility(View.VISIBLE);
                     layoutLocation.setVisibility(View.VISIBLE);
                     layoutLocation.setVisibility(View.VISIBLE);
                     frameLayout.setVisibility(View.GONE);
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +96,22 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
         restaurantRecyclerView.smoothScrollToPosition(1);
+        restaurantRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && dy < 100){
+                    layoutLocation.setVisibility(View.GONE);
+                }else if (dy < 0 && dy >-100){
+                    layoutLocation.setVisibility(View.VISIBLE);
+                }
+                Log.e(TAG, "onScrolled: "+dy+" - "+dx );
+            }
+
+        });
+
+        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up);
+        layoutLocation.animate().translationY(3);
         restaurantViewModel = new RestaurantViewModel();
 
         restaurantViewModel.getPagedList().observe(this, new Observer<PagedList<Restaurant>>() {
@@ -111,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         CurrentLocation currentLocation = new CurrentLocation(this);
         deliveryAddress.setText(currentLocation.getCurrentAddress());
         String[] locality = currentLocation.getCurrentAddress().split(",");
-        String street = locality[2]+", "+locality[3];
+        String street = locality[2] + ", " + locality[3];
         addressHeading.setText(street.trim());
     }
 
