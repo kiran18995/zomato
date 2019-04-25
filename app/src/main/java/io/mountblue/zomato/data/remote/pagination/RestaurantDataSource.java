@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.paging.PageKeyedDataSource;
 
+import io.mountblue.zomato.CurrentLocation;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
+import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
 import io.reactivex.Observable;
@@ -19,6 +21,11 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
 
     private static final int FIRST_PAGE = 1;
 
+    private static final double lat = 12.9040821;
+
+    private static final double lon = 77.5990793;
+
+
     private static final String TAG = "RestaurantPageKeyedData";
 
     private final RestaurantService restaurantService;
@@ -31,7 +38,7 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
 
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurants(FIRST_PAGE)
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getSearch(FIRST_PAGE,lat,lon," ")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
@@ -65,7 +72,7 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
 
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurants((params.key + 20))
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getSearch((params.key + 20),lat,lon," ")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
@@ -77,7 +84,7 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
             @Override
             public void onNext(RestaurantResponse restaurantResponse) {
                 callback.onResult(restaurantResponse.getRestaurants(), (params.key + 20));
-                Log.e(TAG, "onResponse: " + (params.key + 20));
+                Log.e(TAG, "onResponse: load" + (params.key + 20));
             }
 
             @Override

@@ -1,5 +1,6 @@
 package io.mountblue.zomato;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +34,9 @@ import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.RestaurantAdapter;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.data.remote.RestaurantViewModel;
+import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
+import io.mountblue.zomato.view.fragment.SearchFragment;
 
 public class MainActivity extends DaggerAppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -49,6 +52,10 @@ public class MainActivity extends DaggerAppCompatActivity {
     LinearLayout layoutSearch;
     @BindView(R.id.layout_location)
     LinearLayout layoutLocation;
+    @BindView(R.id.search_query)
+    TextView searchQuery;
+    Fragment fragment;
+    CurrentLocation currentLocation;
 
     private PagedList<Restaurant> restaurantPagedList;
 
@@ -61,6 +68,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    searchQuery.clearFocus();
                     restaurantRecyclerView.setVisibility(View.VISIBLE);
                     layoutSearch.setVisibility(View.VISIBLE);
                     layoutSearch.setVisibility(View.VISIBLE);
@@ -69,6 +77,8 @@ public class MainActivity extends DaggerAppCompatActivity {
                     frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
+                    fragment = new GoOutFragment();
+                    showFragment(fragment);
                     restaurantRecyclerView.setVisibility(View.GONE);
                     frameLayout.setVisibility(View.VISIBLE);
                     layoutSearch.setVisibility(View.GONE);
@@ -81,6 +91,12 @@ public class MainActivity extends DaggerAppCompatActivity {
                     frameLayout.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_search:
+                    fragment = new SearchFragment();
+                    showFragment(fragment);
+                    restaurantRecyclerView.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    layoutSearch.setVisibility(View.GONE);
+                    layoutLocation.setVisibility(View.VISIBLE);
                     return true;
             }
             return false;
@@ -96,7 +112,10 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        currentLocation = new CurrentLocation(this);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+        fragment = new GoOutFragment();
         navView.setItemIconTintList(null);
         ButterKnife.bind(this);
 
@@ -116,25 +135,39 @@ public class MainActivity extends DaggerAppCompatActivity {
         });
 
         frameLayout.setVisibility(View.GONE);
-        showFragment();
+        showFragment(fragment);
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         setCurrentAddress();
+
+        searchQuery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("addressHeading",addressHeading.getText());
+                intent.putExtra("deliveryAddress",deliveryAddress.getText());
+                startActivity(intent);
+            }
+        });
     }
 
     private void setCurrentAddress() {
         CurrentLocation currentLocation = new CurrentLocation(this);
         deliveryAddress.setText(currentLocation.getCurrentAddress());
-        String[] locality = currentLocation.getCurrentAddress().split(",");
-        String street = locality[2] + ", " + locality[3];
-        addressHeading.setText(street.trim());
+        addressHeading.setText(getAddressHeading());
     }
 
-    private void showFragment() {
-        Fragment fragment = new GoOutFragment();
+    private String getAddressHeading() {
+        String[] locality = currentLocation.getCurrentAddress().split(",");
+        String addressHeading = locality[2] + ", " + locality[3];
+        return addressHeading.trim();
+    }
+
+    private void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.replace(R.id.frameLayout, fragment)
                 .commit();
     }
@@ -144,5 +177,19 @@ public class MainActivity extends DaggerAppCompatActivity {
         restaurantAdapter.submitList(restaurantPagedList);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         restaurantAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
+
     }
 }
