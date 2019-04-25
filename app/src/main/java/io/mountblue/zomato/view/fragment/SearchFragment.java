@@ -20,6 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,9 +38,14 @@ import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
@@ -50,6 +58,9 @@ public class SearchFragment extends Fragment {
     ProgressBar searchProgressBar;
     @BindView(R.id.search_close)
     ImageView searchClose;
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private PublishSubject<String> publishSubject = PublishSubject.create();
+    private RestaurantService apiService;
 
 
     List<Restaurant> restaurantList;
@@ -62,83 +73,94 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
-
         restaurantList = new ArrayList<>();
         CurrentLocation currentLocation = new CurrentLocation(getContext());
         double latitude = currentLocation.getCurrentLatitude();
         double longitude = currentLocation.getCurrentLongitude();
-        Log.e(TAG, "onCreateView: "+latitude+"  "+longitude);
+        Log.e(TAG, "onCreateView: " + latitude + "  " + longitude);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
         restaurantRecyclerView.smoothScrollToPosition(1);
 
-        typedText.addTextChangedListener(new TextWatcher() {
+        apiService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
 
-            public void afterTextChanged(Editable s) {
-            }
+        DisposableObserver<RestaurantResponse> observer = getSearchObserver();
 
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
+        disposable.add(publishSubject.debounce(300, TimeUnit.MICROSECONDS)
+                .distinctUntilChanged()
+                .switchMapSingle(new Function<String, Single<RestaurantResponse>>() {
+                    @Override
+                    public Single<RestaurantResponse> apply(String s) throws Exception {
+                        return apiService.getData(1, latitude, longitude, s)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                })
+                .subscribeWith(observer));
 
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                searchClose.setVisibility(View.GONE);
-                if (count > 0) {
-                    searchProgressBar.setVisibility(View.VISIBLE);
-                    Observable<RestaurantResponse> apiService = ApiClient.getRetrofitInstance().create(RestaurantService.class)
-                            .getSearch(1, latitude, longitude, s)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread());
-                    apiService.subscribe(new Observer<RestaurantResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
 
-                        }
+        disposable.add(RxTextView.textChangeEvents(typedText)
+                .skipInitialValue()
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(searchContactsTextWatcher()));
 
-                        @Override
-                        public void onNext(RestaurantResponse restaurantResponse) {
-                            Log.e(TAG, "onNext: " + restaurantResponse.getRestaurants().size());
-                            restaurantList.clear();
-                            restaurantList=new ArrayList<>();
-                            restaurantList.addAll(restaurantResponse.getRestaurants());
-                            SearchAdapter  searchAdapter = new SearchAdapter(getContext());
-                            searchAdapter.setRestaurantList(restaurantList);
-                            restaurantRecyclerView.setAdapter(searchAdapter);
-                            searchAdapter.notifyDataSetChanged();
-                            searchProgressBar.setVisibility(View.GONE);
-                            searchClose.setVisibility(View.VISIBLE);
-                        }
+        disposable.add(observer);
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.e(TAG, "onError: " + e.getStackTrace());
-                        }
+        publishSubject.onNext("");
 
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-
-                }
-
-            }
-        });
-        typedText.requestFocus();
-        searchClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                typedText.setText("");
-                typedText.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-        });
         return view;
     }
 
 
+    private DisposableObserver<RestaurantResponse> getSearchObserver() {
+        return new DisposableObserver<RestaurantResponse>() {
+            @Override
+            public void onNext(RestaurantResponse restaurants) {
+                Log.e(TAG, "onNext: " + restaurants.getRestaurants().size());
+                restaurantList.clear();
+                restaurantList = new ArrayList<>();
+                restaurantList.addAll(restaurants.getRestaurants());
+                SearchAdapter searchAdapter = new SearchAdapter(getContext());
+                searchAdapter.setRestaurantList(restaurantList);
+                restaurantRecyclerView.setAdapter(searchAdapter);
+                searchAdapter.notifyDataSetChanged();
+                searchProgressBar.setVisibility(View.GONE);
+                searchClose.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + e.getStackTrace());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
+
+    private DisposableObserver<TextViewTextChangeEvent> searchContactsTextWatcher() {
+        return new DisposableObserver<TextViewTextChangeEvent>() {
+            @Override
+            public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
+                Log.d(TAG, "Search query: " + textViewTextChangeEvent.text());
+                publishSubject.onNext(textViewTextChangeEvent.text().toString());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "onError: " + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
 
 }
