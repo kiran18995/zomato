@@ -1,4 +1,4 @@
-package io.mountblue.zomato.view.gooutfragment;
+package io.mountblue.zomato.view;
 
 import android.util.Log;
 

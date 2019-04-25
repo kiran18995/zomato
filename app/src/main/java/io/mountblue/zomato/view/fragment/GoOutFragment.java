@@ -1,4 +1,4 @@
-package io.mountblue.zomato.view.gooutfragment;
+package io.mountblue.zomato.view.fragment;
 
 import android.os.Bundle;
 
@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.CollectionAdapter;
 import io.mountblue.zomato.module.gooutmodule.Collection;
+import io.mountblue.zomato.view.CollectionViewModel;
 import io.mountblue.zomato.viewmodel.ViewModelProviderFactory;
 
 public class GoOutFragment extends Fragment {

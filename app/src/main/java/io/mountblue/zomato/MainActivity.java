@@ -33,7 +33,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.RestaurantAdapter;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.data.remote.RestaurantViewModel;
-import io.mountblue.zomato.view.gooutfragment.GoOutFragment;
+import io.mountblue.zomato.view.fragment.GoOutFragment;
 
 public class MainActivity extends DaggerAppCompatActivity {
     private static final String TAG = "MainActivity";
