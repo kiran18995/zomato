@@ -25,14 +25,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.RestaurantAdapter;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.data.remote.RestaurantViewModel;
 import io.mountblue.zomato.view.gooutfragment.GoOutFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity {
     private static final String TAG = "MainActivity";
     @BindView(R.id.restaurantList)
     RecyclerView restaurantRecyclerView;
@@ -84,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Inject
+    String someString;
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setItemIconTintList(null);
         ButterKnife.bind(this);
+
+        Log.e(TAG, "onCreate: " + someString);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
@@ -100,17 +109,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && dy < 100){
+                if (dy > 0 && dy < 100) {
                     layoutLocation.setVisibility(View.GONE);
-                }else if (dy < 0 && dy >-100){
+                } else if (dy < 0 && dy > -100) {
                     layoutLocation.setVisibility(View.VISIBLE);
                 }
-                Log.e(TAG, "onScrolled: "+dy+" - "+dx );
+                Log.e(TAG, "onScrolled: " + dy + " - " + dx);
             }
 
         });
 
-        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up);
         layoutLocation.animate().translationY(3);
         restaurantViewModel = new RestaurantViewModel();
 
