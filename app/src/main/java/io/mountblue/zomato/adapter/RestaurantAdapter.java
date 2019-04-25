@@ -1,12 +1,15 @@
 package io.mountblue.zomato.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.mountblue.zomato.CurrentLocation;
+import io.mountblue.zomato.RestaurantDetails;
 import io.mountblue.zomato.RoundedTransformation;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.module.Restaurant;
@@ -53,6 +57,19 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
 
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("restaurant", getItem(position));
+        bundle.putParcelable("userRating", getItem(position).getRestaurant().getUserRating());
+        bundle.putParcelable("location", getItem(position).getRestaurant().getLocation());
+        holder.restaurantCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, RestaurantDetails.class);
+                intent.putExtra("restaurant", bundle);
+                context.startActivity(intent);
+            }
+        });
         holder.restaurantName.setText(getItem(position).getRestaurant().getName());
         holder.foodType.setText(String.format("%s Places", getItem(position).getRestaurant().getCuisines()));
         if (!getItem(position).getRestaurant().getThumb().isEmpty()) {
@@ -87,6 +104,9 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
         TextView foodType;
         @BindView(R.id.estimate_time)
         TextView estimateTime;
+        @BindView(R.id.restaurant_card)
+        LinearLayout restaurantCard;
+
         public RestaurantViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -105,21 +125,19 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
         endPoint.setLatitude(Double.parseDouble(restaurantLat));
         endPoint.setLongitude(Double.parseDouble(restaurantLon));
 
-        return startPoint.distanceTo(endPoint)/1000;
+        return startPoint.distanceTo(endPoint) / 1000;
     }
 
     private String getEstimateTimeRange(float distance) {
         if (distance >= 10) {
             return "50-60 Mins";
-        }
-        else if (distance < 10 && distance >= 7 ) {
+        } else if (distance < 10 && distance >= 7) {
             return "40-50 Mins";
-        }
-        else if (distance < 7 && distance > 4 ) {
+        } else if (distance < 7 && distance > 4) {
             return "25-35 Mins";
-        }
-        else {
+        } else {
             return "15-25 Mins";
         }
     }
+
 }

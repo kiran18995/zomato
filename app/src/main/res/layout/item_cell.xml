@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/restaurant_card"
         android:clickable="true"
         android:focusable="true"
         android:background="?attr/selectableItemBackground"

@@ -9,4 +9,6 @@
     <string name="go_out">GO OUT</string>
     <string name="gold">GOLD</string>
     <string name="search">SEARCH</string>
+    <string name="title_activity_restaurant_details">RestaurantDetails</string>
+    <string name="action_settings">Settings</string>
 </resources>

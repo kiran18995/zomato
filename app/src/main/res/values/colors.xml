@@ -3,8 +3,10 @@
     <color name="colorPrimary">#F5F5F5</color>
     <color name="colorPrimaryDark">#173143</color>
     <color name="colorAccent">#0AAC9B</color>
+    <color name="circleborder">#EFEFEF</color>
     <color name="locationSurface">#F8F8F8</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="grey">#5D5D67</color>
     <color name="light_black">#616161</color>
 </resources>
