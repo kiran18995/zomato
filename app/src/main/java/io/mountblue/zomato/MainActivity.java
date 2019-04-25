@@ -96,22 +96,6 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
         restaurantRecyclerView.smoothScrollToPosition(1);
-        restaurantRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && dy < 100){
-                    layoutLocation.setVisibility(View.GONE);
-                }else if (dy < 0 && dy >-100){
-                    layoutLocation.setVisibility(View.VISIBLE);
-                }
-                Log.e(TAG, "onScrolled: "+dy+" - "+dx );
-            }
-
-        });
-
-        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_up);
-        layoutLocation.animate().translationY(3);
         restaurantViewModel = new RestaurantViewModel();
 
         restaurantViewModel.getPagedList().observe(this, new Observer<PagedList<Restaurant>>() {
