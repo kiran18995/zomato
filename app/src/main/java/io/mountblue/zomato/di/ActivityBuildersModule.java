@@ -5,7 +5,7 @@ import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import io.mountblue.zomato.MainActivity;
 import io.mountblue.zomato.di.bindViewModule.RestaurantViewModelsModule;
-import io.mountblue.zomato.view.gooutfragment.GoOutFragment;
+import io.mountblue.zomato.view.fragment.GoOutFragment;
 
 @Module
 public abstract class ActivityBuildersModule {

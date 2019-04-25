@@ -6,7 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import io.mountblue.zomato.di.ViewModelKey;
-import io.mountblue.zomato.view.gooutfragment.CollectionViewModel;
+import io.mountblue.zomato.view.CollectionViewModel;
 
 @Module
 public abstract class RestaurantViewModelsModule {
