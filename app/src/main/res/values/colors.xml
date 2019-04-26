@@ -9,4 +9,5 @@
     <color name="black">#000000</color>
     <color name="grey">#5D5D67</color>
     <color name="light_black">#616161</color>
+    <color name="current_location">#0DA314</color>
 </resources>

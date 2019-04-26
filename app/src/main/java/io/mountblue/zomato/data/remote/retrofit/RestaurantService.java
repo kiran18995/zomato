@@ -5,6 +5,7 @@ import java.util.List;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
 import io.mountblue.zomato.module.gooutmodule.Collections;
+import io.mountblue.zomato.module.suggestion.LocationSuggestions;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
@@ -32,6 +33,13 @@ public interface RestaurantService {
                                        @Query("lat") double lat,
                                        @Query("lon") double lon,
                                        @Query("q") CharSequence q);
+
+    @Headers("user-key: ef8c51221cb43b81b160316fb66a3c82")
+    @GET("locations")
+    Single<LocationSuggestions> getAddressSuggestions(@Query("count") int count,
+                                       @Query("query") CharSequence q);
+
+
 
   /*  @GET("restaurant.json")
     Call<RestaurantResponse> getRestaurants();*/

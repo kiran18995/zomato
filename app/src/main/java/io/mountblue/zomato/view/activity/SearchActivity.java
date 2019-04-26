@@ -10,6 +10,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -25,6 +26,8 @@ public class SearchActivity extends AppCompatActivity {
     TextView deliveryAddress;
     @BindView(R.id.address_heading)
     TextView addressHeading;
+    @BindView(R.id.layout_location)
+    LinearLayout layoutLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        layoutLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addressIntent = new Intent(SearchActivity.this, AddressActivity.class);
+                startActivity(addressIntent);
             }
         });
     }

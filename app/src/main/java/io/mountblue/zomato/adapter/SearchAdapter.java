@@ -25,7 +25,7 @@ import io.mountblue.zomato.module.Restaurant;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private static final String TAG = "RestaurantAdapter";
-     private List<Restaurant> restaurantList;
+    private List<Restaurant> restaurantList;
     private Context context;
 
     public SearchAdapter(Context context) {
