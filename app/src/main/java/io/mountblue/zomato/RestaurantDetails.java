@@ -1,25 +1,43 @@
 package io.mountblue.zomato;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.squareup.picasso.Picasso;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.net.URL;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.mountblue.zomato.adapter.ReviewAdapter;
 import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.UserRating;
+import io.mountblue.zomato.module.reviewmodule.UserReview;
+import io.mountblue.zomato.view.CollectionViewModel;
+import io.mountblue.zomato.viewmodel.ViewModelProviderFactory;
 
 public class RestaurantDetails extends AppCompatActivity {
     private static final String TAG = "RestaurantDetails";
+    public static final String CROP_IMAGE = "?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A";
     @BindView(R.id.backdrop)
     ImageView backDrop;
     @BindView(R.id.toolbar)
@@ -32,6 +50,12 @@ public class RestaurantDetails extends AppCompatActivity {
     TextView subTitle;
     @BindView(R.id.location)
     TextView location;
+    @BindView(R.id.recycler_review)
+    RecyclerView recycler_review;
+
+    private CollectionViewModel collectionViewModel;
+    @Inject
+    ViewModelProviderFactory viewModelProviderFactory;
 
     private Restaurant restaurant;
     private UserRating userRating;
@@ -44,6 +68,9 @@ public class RestaurantDetails extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        recycler_review.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getParcelableExtra("restaurant");
@@ -51,11 +78,48 @@ public class RestaurantDetails extends AppCompatActivity {
         userRating = bundle.getParcelable("userRating");
         restaurantLocation = bundle.getParcelable("location");
         if (!restaurant.getRestaurant().getThumb().isEmpty()) {
-            Picasso.with(this).load(restaurant.getRestaurant().getThumb().replace("?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A", "")).placeholder(R.drawable.food_placeholder).centerCrop().fit().into(backDrop);
+            Picasso.with(this).load(restaurant.getRestaurant().getThumb().replace(CROP_IMAGE, "")).placeholder(R.drawable.food_placeholder).centerCrop().fit().into(backDrop);
         }
         restaurantTitle.setText(restaurant.getRestaurant().getName());
         averageRating.setText(userRating.getAggregateRating());
         subTitle.setText(String.format("%s Places", restaurant.getRestaurant().getCuisines()));
         location.setText(restaurantLocation.getAddress());
+        collectionViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CollectionViewModel.class);
+        collectionViewModel.getAllReview(Integer.parseInt(restaurant.getRestaurant().getId())).observe(this, new Observer<List<UserReview>>() {
+            @Override
+            public void onChanged(List<UserReview> userReviews) {
+                Log.e(TAG, "onChanged: "+userReviews.size());
+                setRecyclerView(userReviews);
+            }
+        });
+    }
+
+    private void setRecyclerView(List<UserReview> userReviews) {
+        ReviewAdapter reviewAdapter = new ReviewAdapter(this,userReviews);
+        recycler_review.setAdapter(reviewAdapter);
+        reviewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_restaurant_details,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:finish();break;
+            case R.id.action_share:
+                String url = restaurant.getRestaurant().getUrl();
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.putExtra(Intent.EXTRA_TEXT,url);
+                i.setType("text/plain");
+                startActivity(i);
+        }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

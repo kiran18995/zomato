@@ -1,11 +1,14 @@
 package io.mountblue.zomato.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.mountblue.zomato.CurrentLocation;
 import io.mountblue.zomato.R;
+import io.mountblue.zomato.RestaurantDetails;
 import io.mountblue.zomato.RoundedTransformation;
 import io.mountblue.zomato.module.Restaurant;
 
@@ -59,6 +63,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     .fit().centerCrop()
                     .into(holder.restaurantImage);
         }
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("restaurant", restaurantList.get(position));
+        bundle.putParcelable("userRating", restaurantList.get(position).getRestaurant().getUserRating());
+        bundle.putParcelable("location", restaurantList.get(position).getRestaurant().getLocation());
+        holder.restaurantCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, RestaurantDetails.class);
+                intent.putExtra("restaurant", bundle);
+                context.startActivity(intent);
+            }
+        });
+
         holder.restaurantRating.setText(restaurantList.get(position).getRestaurant().getUserRating().getAggregateRating());
         if (restaurantList.get(position).getRestaurant().getAverageCostForTwo() != null) {
             holder.restaurantRate.setText(restaurantList.get(position).getRestaurant().getAverageCostForTwo().toString());
@@ -88,6 +105,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         TextView foodType;
         @BindView(R.id.estimate_time)
         TextView estimateTime;
+        @BindView(R.id.restaurant_card)
+        LinearLayout restaurantCard;
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -81,52 +81,10 @@
             android:text="Highlighted Reviews"
             android:textColor="@color/black" />
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_review"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/person"
-                app:civ_border_color="@color/circleborder"
-                app:civ_border_width="2dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/circular_medium"
-                    android:text="Varnika Gupta"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@android:color/darker_gray" />
-
-                <TextView
-                    android:id="@+id/person_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rating_circular"
-                    android:fontFamily="@font/circular_bold"
-                    android:text="4.1★"
-                    android:textColor="#5BA829"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

@@ -11,6 +11,8 @@ import javax.inject.Inject;
 
 import io.mountblue.zomato.data.RestaurantRepository;
 import io.mountblue.zomato.module.gooutmodule.Collection;
+import io.mountblue.zomato.module.reviewmodule.Review;
+import io.mountblue.zomato.module.reviewmodule.UserReview;
 
 public class CollectionViewModel extends ViewModel {
     private RestaurantRepository restaurantRepository;
@@ -24,5 +26,9 @@ public class CollectionViewModel extends ViewModel {
 
     public LiveData<List<Collection>> getAllCollection() {
         return restaurantRepository.getMutableLiveData();
+    }
+
+    public LiveData<List<UserReview>> getAllReview(int id){
+        return restaurantRepository.getUserReviewLiveData(id);
     }
 }
