@@ -1,5 +1,7 @@
 package io.mountblue.zomato.data.remote;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
@@ -20,13 +22,14 @@ public class RestaurantViewModel extends ViewModel {
 
     private LiveData<PagedList<Restaurant>> pagedList;
     private LiveData<RestaurantDataSource> restaurantDataSourceLiveData;
+    private Context context;
     private Executor executor;
 
     @Inject
-    public RestaurantViewModel() {
+    public RestaurantViewModel(Context context) {
         RestaurantService apiService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
 
-        RestaurantDataSourceFactory factory = new RestaurantDataSourceFactory(apiService);
+        RestaurantDataSourceFactory factory = new RestaurantDataSourceFactory(apiService,context);
 
         restaurantDataSourceLiveData = factory.getMutableLiveData();
 

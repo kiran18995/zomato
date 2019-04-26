@@ -1,20 +1,16 @@
 package io.mountblue.zomato.view.fragment;
 
 import android.app.Service;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,12 +33,9 @@ import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -64,8 +57,7 @@ public class SearchFragment extends Fragment {
 
     private CompositeDisposable disposable = new CompositeDisposable();
     private PublishSubject<String> publishSubject = PublishSubject.create();
-    private RestaurantService apiService;
-
+    private RestaurantService restaurantService;
 
 
     List<Restaurant> restaurantList;
@@ -83,7 +75,7 @@ public class SearchFragment extends Fragment {
         CurrentLocation currentLocation = new CurrentLocation(getContext());
         double latitude = currentLocation.getCurrentLatitude();
         double longitude = currentLocation.getCurrentLongitude();
-        Log.e(TAG, "onCreateView: "+latitude+"  "+longitude);
+        Log.e(TAG, "onCreateView: " + latitude + "  " + longitude);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
@@ -102,7 +94,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        apiService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
+        restaurantService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
 
         DisposableObserver<RestaurantResponse> observer = getSearchObserver();
 
@@ -111,7 +103,7 @@ public class SearchFragment extends Fragment {
                 .switchMapSingle(new Function<String, Single<RestaurantResponse>>() {
                     @Override
                     public Single<RestaurantResponse> apply(String s) throws Exception {
-                        return apiService.getData(1, latitude, longitude, s)
+                        return restaurantService.getData(1, latitude, longitude, s)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread());
                     }
@@ -133,15 +125,15 @@ public class SearchFragment extends Fragment {
 
         return view;
     }
+
     private DisposableObserver<RestaurantResponse> getSearchObserver() {
         return new DisposableObserver<RestaurantResponse>() {
             @Override
             public void onNext(RestaurantResponse restaurants) {
                 Log.e(TAG, "onNext: " + restaurants.getRestaurants().size());
-                if (restaurants.getRestaurants().size() > 0){
+                if (restaurants.getRestaurants().size() > 0) {
                     noResultMessage.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     noResultMessage.setVisibility(View.VISIBLE);
                 }
                 restaurantList.clear();
@@ -152,7 +144,7 @@ public class SearchFragment extends Fragment {
                 restaurantRecyclerView.setAdapter(searchAdapter);
                 searchAdapter.notifyDataSetChanged();
                 searchProgressBar.setVisibility(View.GONE);
-                if (typedText.hasFocus()){
+                if (typedText.hasFocus()) {
                     searchClose.setVisibility(View.VISIBLE);
                 }
             }
@@ -175,7 +167,7 @@ public class SearchFragment extends Fragment {
             public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
                 Log.d(TAG, "Search query: " + textViewTextChangeEvent.text());
                 publishSubject.onNext(textViewTextChangeEvent.text().toString());
-                if (typedText.hasFocus()){
+                if (typedText.hasFocus()) {
                     searchProgressBar.setVisibility(View.VISIBLE);
                 }
                 searchClose.setVisibility(View.GONE);

@@ -1,5 +1,6 @@
 package io.mountblue.zomato.data.remote.pagination;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -21,24 +22,22 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
 
     private static final int FIRST_PAGE = 1;
 
-    private static final double lat = 12.9040821;
-
-    private static final double lon = 77.5990793;
-
-
     private static final String TAG = "RestaurantPageKeyedData";
 
     private final RestaurantService restaurantService;
+    private Context context;
 
+    private CurrentLocation currentLocation;
 
-    public RestaurantDataSource(RestaurantService restaurantService) {
+    public RestaurantDataSource(RestaurantService restaurantService, Context context) {
         this.restaurantService = restaurantService;
+        this.context = context;
     }
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
-
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getSearch(FIRST_PAGE,lat,lon," ")
+        currentLocation = new CurrentLocation(context);
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant(FIRST_PAGE, currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
@@ -71,14 +70,13 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
 
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
-
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getSearch((params.key + 20),lat,lon," ")
+        currentLocation = new CurrentLocation(context);
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant((params.key + 20), currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
             @Override
             public void onSubscribe(Disposable d) {
-
             }
 
             @Override

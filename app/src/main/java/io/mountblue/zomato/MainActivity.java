@@ -1,28 +1,19 @@
 package io.mountblue.zomato;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -31,35 +22,36 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
-import io.mountblue.zomato.adapter.RestaurantAdapter;
-import io.mountblue.zomato.module.Restaurant;
-import io.mountblue.zomato.data.remote.RestaurantViewModel;
+import io.mountblue.zomato.adapter.ViewPagerAdapter;
+import io.mountblue.zomato.util.NonSwipeableViewPager;
 import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
+import io.mountblue.zomato.view.fragment.GoldFragment;
+import io.mountblue.zomato.view.fragment.OrderFragment;
 import io.mountblue.zomato.view.fragment.SearchFragment;
 
 public class MainActivity extends DaggerAppCompatActivity {
     private static final String TAG = "MainActivity";
-    @BindView(R.id.restaurantList)
-    RecyclerView restaurantRecyclerView;
-    @BindView(R.id.frameLayout)
-    FrameLayout frameLayout;
+
+
+    @BindView(R.id.view_pager)
+    NonSwipeableViewPager viewPager;
+    @BindView(R.id.nav_view)
+    BottomNavigationView bottomNavigationView;
     @BindView(R.id.delivery_address)
     TextView deliveryAddress;
     @BindView(R.id.address_heading)
     TextView addressHeading;
-    @BindView(R.id.layout_search)
-    LinearLayout layoutSearch;
-    @BindView(R.id.layout_location)
-    LinearLayout layoutLocation;
     @BindView(R.id.search_query)
     TextView searchQuery;
-    Fragment fragment;
-    CurrentLocation currentLocation;
+    @BindView(R.id.layout_location)
+    LinearLayout linearLayoutLocation;
+    @BindView(R.id.layout_search)
+    LinearLayout linearLayoutSearch;
+    private MenuItem prevMenuItem;
 
-    private PagedList<Restaurant> restaurantPagedList;
+    private CurrentLocation currentLocation;
 
-    private RestaurantViewModel restaurantViewModel;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,92 +60,105 @@ public class MainActivity extends DaggerAppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    searchQuery.clearFocus();
-                    restaurantRecyclerView.setVisibility(View.VISIBLE);
-                    layoutSearch.setVisibility(View.VISIBLE);
-                    layoutSearch.setVisibility(View.VISIBLE);
-                    layoutLocation.setVisibility(View.VISIBLE);
-                    layoutLocation.setVisibility(View.VISIBLE);
-                    frameLayout.setVisibility(View.GONE);
+                    viewPager.setCurrentItem(0,false);
+                    linearLayoutSearch.setVisibility(View.VISIBLE);
+                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                    linearLayoutLocation.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_dashboard:
-                    fragment = new GoOutFragment();
-                    showFragment(fragment);
-                    restaurantRecyclerView.setVisibility(View.GONE);
-                    frameLayout.setVisibility(View.VISIBLE);
-                    layoutSearch.setVisibility(View.GONE);
-                    layoutLocation.setVisibility(View.VISIBLE);
+                    linearLayoutSearch.setVisibility(View.GONE);
+                    linearLayoutLocation.setVisibility(View.VISIBLE);
+                    viewPager.setCurrentItem(1,false);
+                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
                 case R.id.navigation_notifications:
-                    restaurantRecyclerView.setVisibility(View.GONE);
-                    layoutSearch.setVisibility(View.GONE);
-                    layoutLocation.setVisibility(View.GONE);
-                    frameLayout.setVisibility(View.GONE);
+                    linearLayoutSearch.setVisibility(View.GONE);
+                    linearLayoutLocation.setVisibility(View.GONE);
+                    viewPager.setCurrentItem(2,false);
+                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
                 case R.id.navigation_search:
-                    fragment = new SearchFragment();
-                    showFragment(fragment);
-                    restaurantRecyclerView.setVisibility(View.GONE);
-                    frameLayout.setVisibility(View.VISIBLE);
-                    layoutSearch.setVisibility(View.GONE);
-                    layoutLocation.setVisibility(View.VISIBLE);
+                    linearLayoutSearch.setVisibility(View.GONE);
+                    linearLayoutLocation.setVisibility(View.VISIBLE);
+                    viewPager.setCurrentItem(3,false);
+                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
             }
             return false;
         }
     };
 
+    private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (prevMenuItem != null) {
+                prevMenuItem.setChecked(false);
+            } else {
+                bottomNavigationView.getMenu().getItem(0).setChecked(false);
+            }
+            Log.e("page", "onPageSelected: " + position);
+            bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
     @Inject
     String someString;
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        currentLocation = new CurrentLocation(this);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        fragment = new GoOutFragment();
-        navView.setItemIconTintList(null);
         ButterKnife.bind(this);
+        currentLocation = new CurrentLocation(this);
+
+        bottomNavigationView.setItemIconTintList(null);
 
         Log.e(TAG, "onCreate: " + someString);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(RecyclerView.VERTICAL);
-        restaurantRecyclerView.setLayoutManager(layoutManager);
-        restaurantRecyclerView.smoothScrollToPosition(1);
-        restaurantViewModel = new RestaurantViewModel();
 
-        restaurantViewModel.getPagedList().observe(this, new Observer<PagedList<Restaurant>>() {
+        viewPager.addOnPageChangeListener(onPageChangeListener);
+
+        viewPager.setOffscreenPageLimit(4);
+
+        viewPager.setOnTouchListener(new View.OnTouchListener()
+        {
             @Override
-            public void onChanged(PagedList<Restaurant> restaurants) {
-                restaurantPagedList = restaurants;
-                setRecyclerView();
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
             }
         });
 
-        frameLayout.setVisibility(View.GONE);
-        showFragment(fragment);
-
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        setCurrentAddress();
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         searchQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("addressHeading",addressHeading.getText());
-                intent.putExtra("deliveryAddress",deliveryAddress.getText());
+                intent.putExtra("addressHeading", addressHeading.getText());
+                intent.putExtra("deliveryAddress", deliveryAddress.getText());
                 startActivity(intent);
             }
         });
+
+        setCurrentAddress();
+
+        setupViewPager(viewPager);
     }
 
     private void setCurrentAddress() {
-        CurrentLocation currentLocation = new CurrentLocation(this);
         deliveryAddress.setText(currentLocation.getCurrentAddress());
         addressHeading.setText(getAddressHeading());
     }
@@ -164,19 +169,28 @@ public class MainActivity extends DaggerAppCompatActivity {
         return addressHeading.trim();
     }
 
-    private void showFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.frameLayout, fragment)
-                .commit();
-    }
+    private void setupViewPager(ViewPager viewPager) {
 
-    private void setRecyclerView() {
-        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(MainActivity.this);
-        restaurantAdapter.submitList(restaurantPagedList);
-        restaurantRecyclerView.setAdapter(restaurantAdapter);
-        restaurantAdapter.notifyDataSetChanged();
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        OrderFragment orderFragment = new OrderFragment();
+
+        GoOutFragment goOutFragment = new GoOutFragment();
+
+        GoldFragment goldFragment = new GoldFragment();
+
+        SearchFragment searchFragment = new SearchFragment();
+
+        adapter.addFragment(orderFragment);
+
+        adapter.addFragment(goOutFragment);
+
+        adapter.addFragment(goldFragment);
+
+        adapter.addFragment(searchFragment);
+
+        viewPager.setAdapter(adapter);
+
     }
 
     @Override
@@ -192,4 +206,5 @@ public class MainActivity extends DaggerAppCompatActivity {
         }
 
     }
+
 }

@@ -16,17 +16,11 @@ import retrofit2.http.Query;
 
 public interface RestaurantService {
 
-
     @Headers("user-key: 90bf4334ba69bcdd538c6d1958839c3f")
     @GET("search")
-    Observable<RestaurantResponse> getRestaurants(@Query("start") int start);
-
-    @Headers("user-key: 90bf4334ba69bcdd538c6d1958839c3f")
-    @GET("search")
-    Observable<RestaurantResponse> getSearch(@Query("start") int start,
-                                             @Query("lat") double lat,
-                                             @Query("lon") double lon,
-                                             @Query("q") CharSequence q);
+    Observable<RestaurantResponse> getRestaurant(@Query("start") int start,
+                                                 @Query("lat") double lat,
+                                                 @Query("lon") double lon);
 
     @Headers("user-key: 90bf4334ba69bcdd538c6d1958839c3f")
     @GET("search")
@@ -44,9 +38,8 @@ public interface RestaurantService {
     @GET("reviews")
     Observable<Review> getReview(@Query("res_id") int resId);
 
-  /*  @GET("restaurant.json")
-    Call<RestaurantResponse> getRestaurants();*/
 
     @GET("collection.json")
     Observable<Collections> getCollections();
+
 }

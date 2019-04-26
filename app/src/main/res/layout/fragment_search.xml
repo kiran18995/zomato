@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,73 +31,79 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:fontFamily="@font/circular_book"
                 android:background="@android:color/transparent"
-                android:maxLines="1"
+                android:fontFamily="@font/circular_book"
                 android:hint="Search for restaurants, dishes..."
-                android:textSize="14sp"
-                android:padding="10dp"/>
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textSize="14sp" />
         </LinearLayout>
+
         <ProgressBar
             android:id="@+id/search_progress_bar"
-            android:visibility="gone"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"/>
-        <ImageView
-            android:id="@+id/search_close"
-            android:visibility="gone"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@drawable/ic_close"/>
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/search_close"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/ic_close"
+            android:visibility="gone" />
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:background="#EFEFEF"
         android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:background="#EFEFEF" />
+        android:paddingBottom="3dp" />
+
     <LinearLayout
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/restaurantList_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <LinearLayout
             android:id="@+id/no_result"
-            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:fontFamily="@font/circular_book"
-                android:textColor="@color/grey"
                 android:paddingTop="7dp"
                 android:paddingBottom="5dp"
-                android:textSize="8sp"
-                android:layout_marginLeft="5dp"
-                android:text="No results found"/>
+                android:text="No results found"
+                android:textColor="@color/grey"
+                android:textSize="8sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:paddingTop="2dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="#EFEFEF" />
+                android:background="#EFEFEF"
+                android:paddingTop="2dp" />
         </LinearLayout>
     </LinearLayout>
-
-
 
 </LinearLayout>
