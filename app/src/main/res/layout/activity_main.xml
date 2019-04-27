@@ -27,13 +27,11 @@
 
         </LinearLayout>
 
-
-            <io.mountblue.zomato.util.NonSwipeableViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            android:layout_marginTop="0dp" />
+        <io.mountblue.zomato.util.NonSwipeableViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"

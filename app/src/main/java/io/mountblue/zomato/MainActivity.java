@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +51,10 @@ public class MainActivity extends DaggerAppCompatActivity {
     LinearLayout linearLayoutLocation;
     @BindView(R.id.layout_search)
     LinearLayout linearLayoutSearch;
+    @BindView(R.id.search_view)
+    LinearLayout searchView;
+    @BindView(R.id.sort_by)
+    ImageView sortBy;
     private MenuItem prevMenuItem;
 
     private CurrentLocation currentLocation;
@@ -61,7 +67,9 @@ public class MainActivity extends DaggerAppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    viewPager.setCurrentItem(0,false);
+                    viewPager.setClipToPadding(false);
+                    viewPager.setPageMargin(60);
+                    viewPager.setCurrentItem(0, false);
                     linearLayoutSearch.setVisibility(View.VISIBLE);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     linearLayoutLocation.setVisibility(View.VISIBLE);
@@ -69,19 +77,19 @@ public class MainActivity extends DaggerAppCompatActivity {
                 case R.id.navigation_dashboard:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.VISIBLE);
-                    viewPager.setCurrentItem(1,false);
+                    viewPager.setCurrentItem(1, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
                 case R.id.navigation_notifications:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.GONE);
-                    viewPager.setCurrentItem(2,false);
+                    viewPager.setCurrentItem(2, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
                 case R.id.navigation_search:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.VISIBLE);
-                    viewPager.setCurrentItem(3,false);
+                    viewPager.setCurrentItem(3, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
             }
@@ -133,24 +141,29 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         viewPager.setOffscreenPageLimit(4);
 
-        viewPager.setOnTouchListener(new View.OnTouchListener()
-        {
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
+            public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        searchQuery.setOnClickListener(new View.OnClickListener() {
+        searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("addressHeading", addressHeading.getText());
                 intent.putExtra("deliveryAddress", deliveryAddress.getText());
                 startActivity(intent);
+            }
+        });
+
+        sortBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -162,6 +175,17 @@ public class MainActivity extends DaggerAppCompatActivity {
             public void onClick(View v) {
                 Intent addressIntent = new Intent(MainActivity.this, AddressActivity.class);
                 startActivity(addressIntent);
+            }
+        });
+
+        viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                if (viewPager.getCurrentItem() == 0) {
+                page.setTranslationY(150);
+                }else {
+                    page.setTranslationY(0);
+                }
             }
         });
     }
