@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.ViewPagerAdapter;
 import io.mountblue.zomato.util.NonSwipeableViewPager;
+import io.mountblue.zomato.view.activity.AddressActivity;
 import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
 import io.mountblue.zomato.view.fragment.GoldFragment;
@@ -156,6 +157,13 @@ public class MainActivity extends DaggerAppCompatActivity {
         setCurrentAddress();
 
         setupViewPager(viewPager);
+        linearLayoutLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addressIntent = new Intent(MainActivity.this, AddressActivity.class);
+                startActivity(addressIntent);
+            }
+        });
     }
 
     private void setCurrentAddress() {

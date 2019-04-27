@@ -28,6 +28,7 @@ import io.mountblue.zomato.module.RestaurantResponse;
 import io.mountblue.zomato.module.suggestion.LocationSuggestion;
 import io.mountblue.zomato.module.suggestion.LocationSuggestions;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
@@ -71,10 +72,19 @@ public class AddressActivity extends AppCompatActivity {
                 .switchMapSingle(new Function<String, Single<LocationSuggestions>>() {
                     @Override
                     public Single<LocationSuggestions> apply(String s) throws Exception {
-                        Log.e(TAG, "apply: "+s);
-                        return apiService.getAddressSuggestions(10,s)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread());
+                        if (s.length() > 0) {
+                            return apiService.getAddressSuggestions(10, s)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread());
+                        }
+                        else {
+                            return new Single<LocationSuggestions>() {
+                                @Override
+                                protected void subscribeActual(SingleObserver<? super LocationSuggestions> observer) {
+
+                                }
+                            };
+                        }
                     }
                 })
                 .subscribeWith(observer));

@@ -34,6 +34,7 @@ import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
@@ -103,9 +104,19 @@ public class SearchFragment extends Fragment {
                 .switchMapSingle(new Function<String, Single<RestaurantResponse>>() {
                     @Override
                     public Single<RestaurantResponse> apply(String s) throws Exception {
-                        return restaurantService.getData(1, latitude, longitude, s)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread());
+                        if (s.length() > 0) {
+                            return restaurantService.getData(1, latitude, longitude, s)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread());
+                        }
+                        else {
+                            return new Single<RestaurantResponse>() {
+                                @Override
+                                protected void subscribeActual(SingleObserver<? super RestaurantResponse> observer) {
+
+                                }
+                            };
+                        }
                     }
                 })
                 .subscribeWith(observer));
@@ -165,12 +176,14 @@ public class SearchFragment extends Fragment {
         return new DisposableObserver<TextViewTextChangeEvent>() {
             @Override
             public void onNext(TextViewTextChangeEvent textViewTextChangeEvent) {
-                Log.d(TAG, "Search query: " + textViewTextChangeEvent.text());
-                publishSubject.onNext(textViewTextChangeEvent.text().toString());
-                if (typedText.hasFocus()) {
-                    searchProgressBar.setVisibility(View.VISIBLE);
+                if (typedText.getText().length()>0) {
+                    Log.d(TAG, "Search query: " + textViewTextChangeEvent.text());
+                    publishSubject.onNext(textViewTextChangeEvent.text().toString());
+                    if (typedText.hasFocus()) {
+                        searchProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    searchClose.setVisibility(View.GONE);
                 }
-                searchClose.setVisibility(View.GONE);
             }
 
             @Override
