@@ -2,7 +2,6 @@ package io.mountblue.zomato;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.squareup.picasso.Picasso;
@@ -16,14 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.net.URL;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,6 +32,7 @@ import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.UserRating;
 import io.mountblue.zomato.module.reviewmodule.UserReview;
+import io.mountblue.zomato.util.NetworkState;
 import io.mountblue.zomato.view.CollectionViewModel;
 import io.mountblue.zomato.viewmodel.ViewModelProviderFactory;
 
@@ -55,6 +53,8 @@ public class RestaurantDetails extends AppCompatActivity {
     TextView location;
     @BindView(R.id.recycler_review)
     RecyclerView recycler_review;
+    @BindView(R.id.search_progress_bar)
+    ProgressBar progressBar;
 
     private CollectionViewModel collectionViewModel;
     @Inject
@@ -92,32 +92,44 @@ public class RestaurantDetails extends AppCompatActivity {
         collectionViewModel.getAllReview(Integer.parseInt(restaurant.getRestaurant().getId())).observe(this, new Observer<List<UserReview>>() {
             @Override
             public void onChanged(List<UserReview> userReviews) {
-                Log.e(TAG, "onChanged: "+userReviews.size());
+                Log.e(TAG, "onChanged: " + userReviews.size());
                 setRecyclerView(userReviews);
+            }
+        });
+        collectionViewModel.getNetwork().observe(this, new Observer<NetworkState>() {
+            @Override
+            public void onChanged(NetworkState networkState) {
+                if (networkState == NetworkState.LOADING) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
     }
 
     private void setRecyclerView(List<UserReview> userReviews) {
-        ReviewAdapter reviewAdapter = new ReviewAdapter(this,userReviews);
+        ReviewAdapter reviewAdapter = new ReviewAdapter(this, userReviews);
         recycler_review.setAdapter(reviewAdapter);
         reviewAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_restaurant_details,menu);
+        getMenuInflater().inflate(R.menu.menu_restaurant_details, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:finish();break;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
             case R.id.action_share:
                 String url = restaurant.getRestaurant().getUrl();
                 Intent i = new Intent(Intent.ACTION_SEND);
-                i.putExtra(Intent.EXTRA_TEXT,url);
+                i.putExtra(Intent.EXTRA_TEXT, url);
                 i.setType("text/plain");
                 startActivity(i);
         }

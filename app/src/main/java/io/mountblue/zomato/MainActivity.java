@@ -182,8 +182,10 @@ public class MainActivity extends DaggerAppCompatActivity {
             @Override
             public void transformPage(@NonNull View page, float position) {
                 if (viewPager.getCurrentItem() == 0) {
-                page.setTranslationY(150);
-                }else {
+                    page.setTranslationY(150);
+                } else if (viewPager.getCurrentItem() == 1) {
+                    page.setTranslationY(0);
+                } else {
                     page.setTranslationY(0);
                 }
             }

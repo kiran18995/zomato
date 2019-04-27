@@ -12,6 +12,7 @@ import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.module.gooutmodule.Collections;
 import io.mountblue.zomato.module.reviewmodule.Review;
 import io.mountblue.zomato.module.reviewmodule.UserReview;
+import io.mountblue.zomato.util.NetworkState;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,8 +23,10 @@ public class RestaurantRepository {
     private static final String TAG = "RestaurantRepository";
     private MutableLiveData<List<Collection>> mutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<UserReview>> userReviewLiveData = new MutableLiveData<>();
+    private MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
 
     public MutableLiveData<List<Collection>> getMutableLiveData() {
+        networkState.postValue(NetworkState.LOADING);
         Observable<Collections> apiService = ApiClient.getRetrofitInstanceByGit().create(RestaurantService.class)
                 .getCollections()
                 .subscribeOn(Schedulers.io())
@@ -39,11 +42,13 @@ public class RestaurantRepository {
             public void onNext(Collections collections) {
                 Log.e(TAG, "onResponse: " + collections.getCollections().size());
                 mutableLiveData.setValue(collections.getCollections());
+                networkState.postValue(NetworkState.LOADED);
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "onResponse: Error " + e.getMessage());
+                networkState.postValue(new NetworkState(NetworkState.Status.FAILED, e.getMessage()));
             }
 
             @Override
@@ -52,30 +57,12 @@ public class RestaurantRepository {
             }
         });
 
-
-
-       /* apiService.getCollections().enqueue(new Callback<Collections>() {
-            @Override
-            public void onResponse(Call<Collections> call, Response<Collections> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.e(TAG, "onResponse: " + response.body().getCollections().size());
-                    mutableLiveData.setValue(response.body().getCollections());
-                } else {
-                    Log.e(TAG, "onResponse: Error ");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Collections> call, Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage());
-            }
-        });*/
         return mutableLiveData;
     }
 
-    public MutableLiveData<List<UserReview>> getUserReviewLiveData(int id){
-
-        RestaurantService restaurantService= ApiClient.getRetrofitInstance().create(RestaurantService.class);
+    public MutableLiveData<List<UserReview>> getUserReviewLiveData(int id) {
+        networkState.postValue(NetworkState.LOADING);
+        RestaurantService restaurantService = ApiClient.getRetrofitInstance().create(RestaurantService.class);
 
         Observable<Review> userReviewObservable = restaurantService
                 .getReview(id)
@@ -92,11 +79,13 @@ public class RestaurantRepository {
             public void onNext(Review review) {
                 Log.e(TAG, "onResponse: " + review.getUserReviews().size());
                 userReviewLiveData.setValue(review.getUserReviews());
+                networkState.postValue(NetworkState.LOADED);
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "reviewRespons: Error " + e.getMessage());
+                networkState.postValue(new NetworkState(NetworkState.Status.FAILED, e.getMessage()));
             }
 
             @Override
@@ -106,5 +95,9 @@ public class RestaurantRepository {
         });
 
         return userReviewLiveData;
+    }
+
+    public MutableLiveData<NetworkState> stateMutableLiveData() {
+        return networkState;
     }
 }

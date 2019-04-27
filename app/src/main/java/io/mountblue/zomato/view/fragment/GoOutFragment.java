@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.CollectionAdapter;
 import io.mountblue.zomato.module.gooutmodule.Collection;
+import io.mountblue.zomato.util.NetworkState;
 import io.mountblue.zomato.view.CollectionViewModel;
 import io.mountblue.zomato.viewmodel.ViewModelProviderFactory;
 
@@ -32,6 +34,8 @@ public class GoOutFragment extends Fragment {
 
     @BindView(R.id.recycler_go_out_list)
     RecyclerView goOutRecyclerView;
+    @BindView(R.id.search_progress_bar)
+    ProgressBar progressBar;
 
     private CollectionViewModel collectionViewModel;
 
@@ -56,6 +60,16 @@ public class GoOutFragment extends Fragment {
             public void onChanged(List<Collection> collections) {
                 collectionList = collections;
                 getCollection();
+            }
+        });
+        collectionViewModel.getNetwork().observe(this, new Observer<NetworkState>() {
+            @Override
+            public void onChanged(NetworkState networkState) {
+                if (networkState == NetworkState.LOADING) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
 

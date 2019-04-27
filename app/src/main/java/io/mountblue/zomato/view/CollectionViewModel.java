@@ -13,6 +13,7 @@ import io.mountblue.zomato.data.RestaurantRepository;
 import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.module.reviewmodule.Review;
 import io.mountblue.zomato.module.reviewmodule.UserReview;
+import io.mountblue.zomato.util.NetworkState;
 
 public class CollectionViewModel extends ViewModel {
     private RestaurantRepository restaurantRepository;
@@ -20,7 +21,7 @@ public class CollectionViewModel extends ViewModel {
 
     @Inject
     public CollectionViewModel() {
-        Log.e("work","work");
+        Log.e("work", "work");
         restaurantRepository = new RestaurantRepository();
     }
 
@@ -28,7 +29,11 @@ public class CollectionViewModel extends ViewModel {
         return restaurantRepository.getMutableLiveData();
     }
 
-    public LiveData<List<UserReview>> getAllReview(int id){
+    public LiveData<List<UserReview>> getAllReview(int id) {
         return restaurantRepository.getUserReviewLiveData(id);
+    }
+
+    public LiveData<NetworkState> getNetwork() {
+        return restaurantRepository.stateMutableLiveData();
     }
 }

@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".RestaurantDetails">
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -20,12 +21,12 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:statusBarScrim="@android:color/transparent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutExpandedTextStyle"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarLayoutExpandedTextStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="@android:color/transparent"
             app:toolbarId="@+id/toolbar">
 
             <ImageView
@@ -56,5 +57,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_restaurant_details" />
+
+    <ProgressBar
+        android:id="@+id/search_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

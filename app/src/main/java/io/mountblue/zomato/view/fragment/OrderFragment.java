@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -25,12 +26,15 @@ import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.RestaurantAdapter;
 import io.mountblue.zomato.data.remote.RestaurantViewModel;
 import io.mountblue.zomato.module.Restaurant;
+import io.mountblue.zomato.util.NetworkState;
 import io.mountblue.zomato.view.activity.SearchActivity;
 
 public class OrderFragment extends Fragment {
 
     @BindView(R.id.restaurantList)
     RecyclerView restaurantRecyclerView;
+    @BindView(R.id.search_progress_bar)
+    ProgressBar progressBar;
 
 
     private PagedList<Restaurant> restaurantPagedList;
@@ -60,12 +64,20 @@ public class OrderFragment extends Fragment {
             }
         });
 
-
+        restaurantViewModel.getNetworkState().observe(this, new Observer<NetworkState>() {
+            @Override
+            public void onChanged(NetworkState networkState) {
+                if (networkState==NetworkState.LOADING) {
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
         return view;
     }
-
 
 
     private void setRecyclerView() {
