@@ -23,7 +23,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,30 +36,32 @@
 
                 <EditText
                     android:id="@+id/location_query"
-                    android:fontFamily="@font/circular_bold"
-                    android:textColor="@color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
                     android:background="@android:color/transparent"
+                    android:fontFamily="@font/circular_bold"
+                    android:hint="Search for your location..."
                     android:maxLines="1"
-                    android:hint="Search for your location..." />
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
             </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="#EFEFEF" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/circular_book"
-                android:textSize="8sp"
-                android:text="e.g Connaught Place, New Delhi" />
+                android:text="e.g Connaught Place, New Delhi"
+                android:textSize="8sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -78,24 +80,25 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_location"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_current" />
 
                 <TextView
-                    android:textColor="@color/current_location"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/circular_book"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Use current location" />
+                    android:fontFamily="@font/circular_book"
+                    android:text="Use current location"
+                    android:textColor="@color/current_location"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="10dp"
                 android:id="@+id/location_suggestions"
-                android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
         </LinearLayout>
 
     </ScrollView>

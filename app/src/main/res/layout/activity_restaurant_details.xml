@@ -20,8 +20,7 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@android:color/transparent"
+            app:statusBarScrim="@android:color/transparent"
             android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutExpandedTextStyle"
             app:contentScrim="?attr/colorPrimary"
@@ -42,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:alpha="0.6"
-                android:background="@drawable/gradiant_for_collection" />
+                android:background="@drawable/gradient_for_thumbnail" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

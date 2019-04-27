@@ -2,9 +2,8 @@ package io.mountblue.zomato.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.location.Location;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.mountblue.zomato.CurrentLocation;
+import io.mountblue.zomato.R;
 import io.mountblue.zomato.RestaurantDetails;
 import io.mountblue.zomato.RoundedTransformation;
-import io.mountblue.zomato.R;
 import io.mountblue.zomato.module.Restaurant;
 
 public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAdapter.RestaurantViewHolder> {

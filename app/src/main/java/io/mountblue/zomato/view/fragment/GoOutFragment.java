@@ -69,6 +69,7 @@ public class GoOutFragment extends Fragment {
         goOutRecyclerView.setLayoutManager(layoutManager);
         CollectionAdapter collectionAdapter = new CollectionAdapter(getContext());
         collectionAdapter.setCollectionList(collectionList);
+        goOutRecyclerView.smoothScrollToPosition(1);
         goOutRecyclerView.setAdapter(collectionAdapter);
         collectionAdapter.notifyDataSetChanged();
     }
