@@ -4,7 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
-    <string name="hello_blank_fragment">Working</string>
+    <string name="hello_blank_fragment">Working Under construction</string>
     <string name="order">ORDER</string>
     <string name="go_out">GO OUT</string>
     <string name="gold">GOLD</string>
@@ -12,4 +12,6 @@
     <string name="title_activity_restaurant_details">RestaurantDetails</string>
     <string name="action_share">Share</string>
     <string name="crop_image"><![CDATA[\?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A]]></string>
+    <string name="sub_text_gold">Choose what\'s right for you</string>
+    <string name="title_gold">Because you want it!</string>
 </resources>

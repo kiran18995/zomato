@@ -82,7 +82,7 @@ public class RestaurantDetails extends AppCompatActivity {
         userRating = bundle.getParcelable("userRating");
         restaurantLocation = bundle.getParcelable("location");
         if (!restaurant.getRestaurant().getThumb().isEmpty()) {
-            Picasso.with(this).load(restaurant.getRestaurant().getThumb().replace(CROP_IMAGE, "")).placeholder(R.drawable.food_placeholder).centerCrop().fit().into(backDrop);
+            Picasso.with(this).load(restaurant.getRestaurant().getThumb().replace(CROP_IMAGE, "")).placeholder(R.drawable.detail_placeholder).centerCrop().fit().into(backDrop);
         }
         restaurantTitle.setText(restaurant.getRestaurant().getName());
         averageRating.setText(userRating.getAggregateRating());
