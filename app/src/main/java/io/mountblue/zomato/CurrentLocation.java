@@ -89,11 +89,11 @@ public class CurrentLocation {
         geocoder = new Geocoder(context);
 
         String provider = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        if (!provider.contains("gps")) { //if gps is disabled
+        /*if (!provider.contains("gps")) { //if gps is disabled
             Intent gpsOptionsIntent = new Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             context.startActivity(gpsOptionsIntent);
-        }
+        }*/
 
         try {
             addresses = geocoder.getFromLocation(getCurrentLatitude(), getCurrentLongitude(), 5);

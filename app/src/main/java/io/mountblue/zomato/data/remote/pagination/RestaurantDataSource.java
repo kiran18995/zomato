@@ -48,7 +48,6 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
         networkState.postValue(NetworkState.LOADING);
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant(FIRST_PAGE, currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
         sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
         double latitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
         double longitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
@@ -89,7 +88,6 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
         networkState.postValue(NetworkState.LOADING);
-        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant((params.key + 20), currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
         sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
         double latitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
         double longitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
