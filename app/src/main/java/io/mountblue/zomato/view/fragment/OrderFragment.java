@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,11 +38,14 @@ public class OrderFragment extends Fragment {
     RecyclerView restaurantRecyclerView;
     @BindView(R.id.search_progress_bar)
     ProgressBar progressBar;
-
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout shimmerFrameLayout;
+    @BindView(R.id.pull_to_refresh)
+    SwipeRefreshLayout pullToRefresh;
 
     private PagedList<Restaurant> restaurantPagedList;
     private RestaurantViewModel restaurantViewModel;
-
+    RestaurantAdapter restaurantAdapter;
 
     public OrderFragment() {
     }
@@ -67,24 +73,43 @@ public class OrderFragment extends Fragment {
         restaurantViewModel.getNetworkState().observe(this, new Observer<NetworkState>() {
             @Override
             public void onChanged(NetworkState networkState) {
-                if (networkState==NetworkState.LOADING) {
-                    progressBar.setVisibility(View.VISIBLE);
+                if (networkState == NetworkState.LOADING) {
                 } else {
+                    shimmerFrameLayout.stopShimmerAnimation();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                 }
             }
         });
 
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setRecyclerView();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         return view;
     }
 
 
     private void setRecyclerView() {
-        RestaurantAdapter restaurantAdapter = new RestaurantAdapter(getContext());
+        restaurantAdapter = new RestaurantAdapter(getContext());
         restaurantAdapter.submitList(restaurantPagedList);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         restaurantAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
+    }
 }

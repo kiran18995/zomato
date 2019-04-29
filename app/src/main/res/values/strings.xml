@@ -14,4 +14,5 @@
     <string name="crop_image"><![CDATA[\?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A]]></string>
     <string name="sub_text_gold">Choose what\'s right for you</string>
     <string name="title_gold">Because you want it!</string>
+    <string name="bookmark">bookmark</string>
 </resources>

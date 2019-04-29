@@ -2,8 +2,10 @@ package io.mountblue.zomato;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -26,6 +28,7 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.ViewPagerAdapter;
 import io.mountblue.zomato.util.NonSwipeableViewPager;
+import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.view.activity.AddressActivity;
 import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
@@ -56,8 +59,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     @BindView(R.id.sort_by)
     ImageView sortBy;
     private MenuItem prevMenuItem;
-
-    private CurrentLocation currentLocation;
+    private SharedPrefrenceAddress sharedPrefrenceAddress;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -131,7 +133,11 @@ public class MainActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        currentLocation = new CurrentLocation(this);
+        sharedPrefrenceAddress = new SharedPrefrenceAddress(getApplicationContext());
+        if (sharedPrefrenceAddress.getDefaultAddress("addressTitle") == null) {
+            CurrentLocation currentLocation = new CurrentLocation(this);
+            currentLocation.setSharedPrefrenceAddress();
+        }
 
         bottomNavigationView.setItemIconTintList(null);
 
@@ -183,8 +189,6 @@ public class MainActivity extends DaggerAppCompatActivity {
             public void transformPage(@NonNull View page, float position) {
                 if (viewPager.getCurrentItem() == 0) {
                     page.setTranslationY(150);
-                } else if (viewPager.getCurrentItem() == 1) {
-                    page.setTranslationY(0);
                 } else {
                     page.setTranslationY(0);
                 }
@@ -193,14 +197,8 @@ public class MainActivity extends DaggerAppCompatActivity {
     }
 
     private void setCurrentAddress() {
-        deliveryAddress.setText(currentLocation.getCurrentAddress());
-        addressHeading.setText(getAddressHeading());
-    }
-
-    private String getAddressHeading() {
-        String[] locality = currentLocation.getCurrentAddress().split(",");
-        String addressHeading = locality[2] + ", " + locality[3];
-        return addressHeading.trim();
+        deliveryAddress.setText(sharedPrefrenceAddress.getAddress());
+        addressHeading.setText(sharedPrefrenceAddress.getDefaultAddress("addressTitle"));
     }
 
     private void setupViewPager(ViewPager viewPager) {
