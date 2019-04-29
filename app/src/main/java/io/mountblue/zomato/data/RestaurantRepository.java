@@ -1,13 +1,17 @@
 package io.mountblue.zomato.data;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import io.mountblue.zomato.data.local.AppExecutors;
+import io.mountblue.zomato.data.local.RestaurantLocalDatabase;
 import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
+import io.mountblue.zomato.module.Restaurant_;
 import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.module.gooutmodule.Collections;
 import io.mountblue.zomato.module.reviewmodule.Review;
@@ -24,6 +28,13 @@ public class RestaurantRepository {
     private MutableLiveData<List<Collection>> mutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<UserReview>> userReviewLiveData = new MutableLiveData<>();
     private MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
+    private AppExecutors appExecutors;
+    private RestaurantLocalDatabase restaurantLocalDatabase;
+    private MutableLiveData<List<Restaurant_>> restaurantMutableLiveData = new MutableLiveData<>();
+
+    public RestaurantRepository() {
+        appExecutors = AppExecutors.getInstance();
+    }
 
     public MutableLiveData<List<Collection>> getMutableLiveData() {
         networkState.postValue(NetworkState.LOADING);
@@ -99,5 +110,26 @@ public class RestaurantRepository {
 
     public MutableLiveData<NetworkState> stateMutableLiveData() {
         return networkState;
+    }
+
+
+    public void saveMovie(Restaurant_ restaurant, Context context) {
+        restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                restaurantLocalDatabase.restaurantDao().insertRestaurant(restaurant);
+            }
+        });
+    }
+
+    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData() {
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                restaurantMutableLiveData.setValue(restaurantLocalDatabase.restaurantDao().getBookmarkRestaurants());
+            }
+        });
+        return restaurantMutableLiveData;
     }
 }

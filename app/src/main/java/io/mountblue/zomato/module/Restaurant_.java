@@ -4,6 +4,12 @@ package io.mountblue.zomato.module;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -11,14 +17,18 @@ import com.google.gson.annotations.SerializedName;
 
 import io.mountblue.zomato.R;
 
+@Entity(tableName = "restaurant")
 public class Restaurant_ implements Parcelable {
 
+    @Embedded
     @SerializedName("R")
     @Expose
     private R r;
     @SerializedName("apikey")
     @Expose
     private String apikey;
+    @PrimaryKey
+    @NonNull
     @SerializedName("id")
     @Expose
     private String id;
@@ -28,6 +38,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("url")
     @Expose
     private String url;
+    @Embedded
     @SerializedName("location")
     @Expose
     private Location location;
@@ -46,6 +57,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("currency")
     @Expose
     private String currency;
+    @Ignore
     @SerializedName("offers")
     @Expose
     private List<Object> offers = null;
@@ -70,6 +82,7 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("thumb")
     @Expose
     private String thumb;
+    @Ignore
     @SerializedName("user_rating")
     @Expose
     private UserRating userRating;
@@ -112,11 +125,16 @@ public class Restaurant_ implements Parcelable {
     @SerializedName("events_url")
     @Expose
     private String eventsUrl;
+
+    @Ignore
     @SerializedName("establishment_types")
     @Expose
     private List<Object> establishmentTypes = null;
 
-    protected Restaurant_(Parcel in) {
+    public Restaurant_() {
+    }
+
+    public Restaurant_(Parcel in) {
         apikey = in.readString();
         id = in.readString();
         name = in.readString();

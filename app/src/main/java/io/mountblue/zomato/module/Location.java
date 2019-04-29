@@ -4,9 +4,14 @@ package io.mountblue.zomato.module;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Location implements Parcelable {
 
     @SerializedName("address")
@@ -37,7 +42,10 @@ public class Location implements Parcelable {
     @Expose
     private String localityVerbose;
 
-    protected Location(Parcel in) {
+    public Location() {
+    }
+
+    public Location(Parcel in) {
         address = in.readString();
         locality = in.readString();
         city = in.readString();
