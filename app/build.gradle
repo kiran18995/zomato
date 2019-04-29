@@ -78,6 +78,10 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.20'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.20'
 
-
     implementation "com.jakewharton.rxbinding2:rxbinding:2.0.0"
+
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    //Google play services
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 }
