@@ -49,7 +49,9 @@ public class CurrentLocation {
         Location locationNet = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         long GPSLocationTime = 0;
-        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+        if (null != locationGPS) {
+            GPSLocationTime = locationGPS.getTime();
+        }
 
         long NetLocationTime = 0;
 
@@ -57,10 +59,9 @@ public class CurrentLocation {
             NetLocationTime = locationNet.getTime();
         }
 
-        if ( 0 < GPSLocationTime - NetLocationTime ) {
+        if (0 < GPSLocationTime - NetLocationTime) {
             return locationGPS;
-        }
-        else {
+        } else {
             return locationNet;
         }
     }
