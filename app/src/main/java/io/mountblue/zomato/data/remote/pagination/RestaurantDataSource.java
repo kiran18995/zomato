@@ -9,8 +9,10 @@ import androidx.paging.PageKeyedDataSource;
 
 import io.mountblue.zomato.CurrentLocation;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
+import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
+import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.util.NetworkState;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -28,7 +30,8 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     private final RestaurantService restaurantService;
     private Context context;
 
-    private CurrentLocation currentLocation;
+    private SharedPrefrenceAddress sharedPrefrenceAddress;
+
     private MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
 
 
@@ -45,8 +48,11 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Restaurant> callback) {
         networkState.postValue(NetworkState.LOADING);
-        currentLocation = new CurrentLocation(context);
         Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant(FIRST_PAGE, currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
+        sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
+        double latitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
+        double longitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant(FIRST_PAGE, latitude, longitude)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {
@@ -58,7 +64,6 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
             @Override
             public void onNext(RestaurantResponse restaurantResponse) {
                 callback.onResult(restaurantResponse.getRestaurants(), null, FIRST_PAGE + 1);
-
             }
 
             @Override
@@ -84,8 +89,11 @@ public class RestaurantDataSource extends PageKeyedDataSource<Integer, Restauran
     @Override
     public void loadAfter(@NonNull final LoadParams<Integer> params, @NonNull final LoadCallback<Integer, Restaurant> callback) {
         networkState.postValue(NetworkState.LOADING);
-        currentLocation = new CurrentLocation(context);
         Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant((params.key + 20), currentLocation.getCurrentLatitude(), currentLocation.getCurrentLongitude())
+        sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
+        double latitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
+        double longitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
+        Observable<RestaurantResponse> restaurantObservable = restaurantService.getRestaurant((params.key + 20), latitude, longitude)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         restaurantObservable.subscribe(new Observer<RestaurantResponse>() {

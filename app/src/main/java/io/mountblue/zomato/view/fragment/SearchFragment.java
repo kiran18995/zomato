@@ -33,6 +33,7 @@ import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.RestaurantResponse;
+import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -73,9 +74,9 @@ public class SearchFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         restaurantList = new ArrayList<>();
-        CurrentLocation currentLocation = new CurrentLocation(getContext());
-        double latitude = currentLocation.getCurrentLatitude();
-        double longitude = currentLocation.getCurrentLongitude();
+        SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(getContext());
+        double latitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
+        double longitude = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
         Log.e(TAG, "onCreateView: " + latitude + "  " + longitude);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);

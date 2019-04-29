@@ -25,6 +25,7 @@ import io.mountblue.zomato.R;
 import io.mountblue.zomato.RestaurantDetails;
 import io.mountblue.zomato.RoundedTransformation;
 import io.mountblue.zomato.module.Restaurant;
+import io.mountblue.zomato.util.SharedPrefrenceAddress;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
@@ -115,11 +116,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     private float setEstimateTime(String restaurantLat, String restaurantLon) {
-        CurrentLocation currentLocation = new CurrentLocation(context);
+        SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
         Location startPoint = new Location("startPoint");
         Location endPoint = new Location("endPoint");
-        double currentLat = currentLocation.getCurrentLatitude();
-        double currentLon = currentLocation.getCurrentLongitude();
+        double currentLat = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLatitude"));
+        double currentLon = Double.parseDouble(sharedPrefrenceAddress.getDefaultAddress("addressLongitude"));
 
         startPoint.setLatitude(currentLat);
         startPoint.setLongitude(currentLon);

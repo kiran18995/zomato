@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.mountblue.zomato.CurrentLocation;
+import io.mountblue.zomato.MainActivity;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.AddressAdapter;
 import io.mountblue.zomato.data.remote.retrofit.ApiClient;
@@ -106,6 +109,15 @@ public class AddressActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        useCurrentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CurrentLocation currentLocation = new CurrentLocation(AddressActivity.this);
+                currentLocation.setSharedPrefrenceAddress();
+                startActivity(new Intent(AddressActivity.this, MainActivity.class));
+            }
+        });
     }
 
     private DisposableObserver<LocationSuggestions> getSearchObserver() {
@@ -116,7 +128,7 @@ public class AddressActivity extends AppCompatActivity {
                 locationSuggestionList.clear();
                 locationSuggestionList = new ArrayList<>();
                 locationSuggestionList.addAll(locationSuggestions.getLocationSuggestions());
-                AddressAdapter addressAdapter = new AddressAdapter(getApplicationContext());
+                AddressAdapter addressAdapter = new AddressAdapter(AddressActivity.this);
                 addressAdapter.setLocationSuggestions(locationSuggestionList);
                 locationSuggestionsRecyclerView.setAdapter(addressAdapter);
             }

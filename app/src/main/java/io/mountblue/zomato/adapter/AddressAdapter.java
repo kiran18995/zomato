@@ -1,6 +1,8 @@
 package io.mountblue.zomato.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.mountblue.zomato.MainActivity;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.module.suggestion.LocationSuggestion;
+import io.mountblue.zomato.util.SharedPrefrenceAddress;
+import io.mountblue.zomato.view.activity.AddressActivity;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
 
@@ -44,6 +49,17 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     @Override
     public void onBindViewHolder(@NonNull AddressAdapter.AddressViewHolder holder, int position) {
         holder.suggestedAddress.setText(locationSuggestions.get(position).getTitle());
+        holder.suggestedAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
+                sharedPrefrenceAddress.setDefaultAddress("addressTitle",locationSuggestions.get(position).getTitle());
+                sharedPrefrenceAddress.setDefaultAddress("addressLatitude", String.valueOf(locationSuggestions.get(position).getLatitude()));
+                sharedPrefrenceAddress.setDefaultAddress("addressLongitude", String.valueOf(locationSuggestions.get(position).getLongitude()));
+                context.startActivity(new Intent(context, MainActivity.class));
+                ((Activity)context).finish();
+            }
+        });
     }
 
     @Override
@@ -61,4 +77,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             ButterKnife.bind(this, itemView);
         }
     }
+
+
 }
