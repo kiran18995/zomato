@@ -56,6 +56,7 @@ public class SearchFragment extends Fragment {
     ImageView searchClose;
     @BindView(R.id.no_result)
     LinearLayout noResultMessage;
+    SearchAdapter searchAdapter;
 
     private CompositeDisposable disposable = new CompositeDisposable();
     private PublishSubject<String> publishSubject = PublishSubject.create();
@@ -82,7 +83,7 @@ public class SearchFragment extends Fragment {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         restaurantRecyclerView.setLayoutManager(layoutManager);
         restaurantRecyclerView.smoothScrollToPosition(1);
-
+        searchAdapter = new SearchAdapter(getContext());
 
         typedText.requestFocus();
         searchClose.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +92,8 @@ public class SearchFragment extends Fragment {
                 typedText.setText("");
                 typedText.clearFocus();
                 searchClose.setVisibility(View.GONE);
+                restaurantList.clear();
+                searchAdapter.notifyDataSetChanged();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
@@ -151,7 +154,6 @@ public class SearchFragment extends Fragment {
                 restaurantList.clear();
                 restaurantList = new ArrayList<>();
                 restaurantList.addAll(restaurants.getRestaurants());
-                SearchAdapter searchAdapter = new SearchAdapter(getContext());
                 searchAdapter.setRestaurantList(restaurantList);
                 restaurantRecyclerView.setAdapter(searchAdapter);
                 searchAdapter.notifyDataSetChanged();

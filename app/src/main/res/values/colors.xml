@@ -12,4 +12,5 @@
     <color name="current_location">#0DA314</color>
     <color name="review_rating">#5BA829</color>
     <color name="background">#dddddd</color>
+    <color name="theme">#E23744</color>
 </resources>

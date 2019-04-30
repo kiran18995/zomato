@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
@@ -49,6 +50,8 @@ public class AddressActivity extends AppCompatActivity {
     LinearLayout useCurrentLocation;
     @BindView(R.id.back)
     ImageView back;
+    @BindView(R.id.address_not_found)
+    TextView addressNotFound;
 
     private static final String TAG = "AddressActivity";
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -125,6 +128,14 @@ public class AddressActivity extends AppCompatActivity {
             @Override
             public void onNext(LocationSuggestions locationSuggestions) {
                 Log.e(TAG, "onNext: "+locationSuggestions.getLocationSuggestions().size());
+                if (locationSuggestions.getLocationSuggestions().size() > 0) {
+                    locationSuggestionsRecyclerView.setVisibility(View.VISIBLE);
+                    addressNotFound.setVisibility(View.GONE);
+                }
+                else {
+                    addressNotFound.setVisibility(View.VISIBLE);
+                    locationSuggestionsRecyclerView.setVisibility(View.GONE);
+                }
                 locationSuggestionList.clear();
                 locationSuggestionList = new ArrayList<>();
                 locationSuggestionList.addAll(locationSuggestions.getLocationSuggestions());
