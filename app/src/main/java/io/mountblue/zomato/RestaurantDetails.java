@@ -56,6 +56,7 @@ public class RestaurantDetails extends AppCompatActivity {
     RecyclerView recycler_review;
     @BindView(R.id.search_progress_bar)
     ProgressBar progressBar;
+    private static boolean isbookmarked;
 
     private CollectionViewModel collectionViewModel;
     @Inject
@@ -64,6 +65,7 @@ public class RestaurantDetails extends AppCompatActivity {
     private Restaurant_ restaurant;
     private UserRating userRating;
     private Location restaurantLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,15 @@ public class RestaurantDetails extends AppCompatActivity {
                 }
             }
         });
+        collectionViewModel.getRestaurant(RestaurantDetails.this,
+                restaurant.getId())
+                .observe(this, new Observer<List<Restaurant_>>() {
+                    @Override
+                    public void onChanged(List<Restaurant_> restaurant_s) {
+                        Log.e(TAG, "onChanged: " + restaurant_s.size());
+                        isbookmarked = restaurant_s.size() > 0;
+                    }
+                });
     }
 
     private void setRecyclerView(List<UserReview> userReviews) {
@@ -137,19 +148,15 @@ public class RestaurantDetails extends AppCompatActivity {
                 break;
             }
             case R.id.action_bookmark: {
-                collectionViewModel.getRestaurant(RestaurantDetails.this,
-                        restaurant.getId())
-                        .observe(this, new Observer<List<Restaurant_>>() {
-                            @Override
-                            public void onChanged(List<Restaurant_> restaurant_s) {
-                                if (restaurant_s.size() > 0) {
-                                    collectionViewModel.removeBookmark(RestaurantDetails.this
-                                            , restaurant.getId());
-                                } else {
-                                    collectionViewModel.saveToBookmark(restaurant, RestaurantDetails.this);
-                                }
-                            }
-                        });
+                Log.e(TAG, "onOptionsItemSelected: " + restaurant.getId());
+                if (isbookmarked) {
+                    collectionViewModel.removeBookmark(RestaurantDetails.this
+                            , restaurant.getId());
+                    isbookmarked = false;
+                } else {
+                    collectionViewModel.saveToBookmark(restaurant, RestaurantDetails.this);
+                    isbookmarked = true;
+                }
             }
         }
         if (item.getItemId() == android.R.id.home) {

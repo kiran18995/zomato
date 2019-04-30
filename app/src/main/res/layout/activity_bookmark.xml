@@ -30,17 +30,6 @@
             android:textColor="@color/black"
             android:textSize="30dp" />
 
-        <LinearLayout
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_10"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <include layout="@layout/layout_search" />
-
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/fragment_container"

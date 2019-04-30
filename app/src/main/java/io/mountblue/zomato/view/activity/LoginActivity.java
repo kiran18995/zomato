@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
         super.onStart();
     }
