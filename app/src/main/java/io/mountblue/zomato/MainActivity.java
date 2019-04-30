@@ -33,6 +33,7 @@ import io.mountblue.zomato.util.NonSwipeableViewPager;
 import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.view.activity.AddressActivity;
 import io.mountblue.zomato.view.activity.BookmarkActivity;
+import io.mountblue.zomato.view.activity.LoginActivity;
 import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
 import io.mountblue.zomato.view.fragment.GoldFragment;
@@ -69,6 +70,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     private MenuItem prevMenuItem;
     private SharedPrefrenceAddress sharedPrefrenceAddress;
+    private int activePagePosition = 0;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -78,41 +80,53 @@ public class MainActivity extends DaggerAppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    viewPager.setClipToPadding(false);
-                    viewPager.setPageMargin(60);
-                    viewPager.setCurrentItem(0, false);
-                    linearLayoutSearch.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
-                    linearLayoutLocation.setVisibility(View.VISIBLE);
+                    loadOrderPage();
                     return true;
                 case R.id.navigation_dashboard:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.VISIBLE);
                     viewPager.setCurrentItem(1, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                    activePagePosition = 1;
                     return true;
                 case R.id.navigation_notifications:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.GONE);
                     viewPager.setCurrentItem(2, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                    activePagePosition = 2;
                     return true;
                 case R.id.navigation_search:
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.VISIBLE);
                     viewPager.setCurrentItem(3, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                    activePagePosition = 3;
                     return true;
                 case R.id.navigation_profile:
-                    linearLayoutSearch.setVisibility(View.GONE);
-                    linearLayoutLocation.setVisibility(View.GONE);
-                    viewPager.setCurrentItem(4, false);
-                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
-                    return true;
+                    if (checkLogIn()) {
+                        linearLayoutSearch.setVisibility(View.GONE);
+                        linearLayoutLocation.setVisibility(View.GONE);
+                        viewPager.setCurrentItem(4, false);
+                        Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                        activePagePosition = 4;
+                        return true;
+                    }
+
             }
             return false;
         }
     };
+
+    private void loadOrderPage() {
+        activePagePosition = 0;
+        viewPager.setClipToPadding(false);
+        viewPager.setPageMargin(60);
+        viewPager.setCurrentItem(0, false);
+        linearLayoutSearch.setVisibility(View.VISIBLE);
+        Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+        linearLayoutLocation.setVisibility(View.VISIBLE);
+    }
 
     private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -254,15 +268,26 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-            //additional code
+        Log.e(TAG, "onBackPressed: activePage " +activePagePosition);
+        if (activePagePosition != 0) {
+            loadOrderPage();
         } else {
-            getSupportFragmentManager().popBackStack();
+            super.onBackPressed();
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
         }
-
     }
+
+    private boolean checkLogIn() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            return true;
+        }
+        finish();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        return false;
+    }
+
 
 }
