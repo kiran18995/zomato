@@ -71,6 +71,7 @@ public class ProfileFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), task -> {
                     Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_LONG).show();
                 });
+        getActivity().finish();
         startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 }

@@ -62,7 +62,6 @@ public class SearchFragment extends Fragment {
     private PublishSubject<String> publishSubject = PublishSubject.create();
     private RestaurantService restaurantService;
 
-
     List<Restaurant> restaurantList;
 
     public SearchFragment() {
@@ -124,7 +123,6 @@ public class SearchFragment extends Fragment {
                     }
                 })
                 .subscribeWith(observer));
-
 
         disposable.add(RxTextView.textChangeEvents(typedText)
                 .skipInitialValue()
@@ -199,5 +197,4 @@ public class SearchFragment extends Fragment {
             }
         };
     }
-
 }
