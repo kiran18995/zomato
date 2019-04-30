@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import javax.inject.Inject;
@@ -34,6 +36,7 @@ import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
 import io.mountblue.zomato.view.fragment.GoldFragment;
 import io.mountblue.zomato.view.fragment.OrderFragment;
+import io.mountblue.zomato.view.fragment.ProfileFragment;
 import io.mountblue.zomato.view.fragment.SearchFragment;
 
 public class MainActivity extends DaggerAppCompatActivity {
@@ -92,6 +95,12 @@ public class MainActivity extends DaggerAppCompatActivity {
                     linearLayoutSearch.setVisibility(View.GONE);
                     linearLayoutLocation.setVisibility(View.VISIBLE);
                     viewPager.setCurrentItem(3, false);
+                    Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
+                    return true;
+                case R.id.navigation_profile:
+                    linearLayoutSearch.setVisibility(View.GONE);
+                    linearLayoutLocation.setVisibility(View.GONE);
+                    viewPager.setCurrentItem(4, false);
                     Log.e(TAG, "onNavigationItemSelected: " + viewPager.getCurrentItem());
                     return true;
             }
@@ -213,6 +222,8 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         SearchFragment searchFragment = new SearchFragment();
 
+        ProfileFragment profileFragment = new ProfileFragment();
+
         adapter.addFragment(orderFragment);
 
         adapter.addFragment(goOutFragment);
@@ -220,6 +231,8 @@ public class MainActivity extends DaggerAppCompatActivity {
         adapter.addFragment(goldFragment);
 
         adapter.addFragment(searchFragment);
+
+        adapter.addFragment(profileFragment);
 
         viewPager.setAdapter(adapter);
 

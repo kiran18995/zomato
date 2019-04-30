@@ -21,4 +21,8 @@
         android:icon="@drawable/search_selector"
         android:title="@string/search" />
 
+    <item android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="PROFILE"/>
+
 </menu>
