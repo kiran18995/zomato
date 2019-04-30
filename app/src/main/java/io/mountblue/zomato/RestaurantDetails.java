@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -56,6 +57,10 @@ public class RestaurantDetails extends AppCompatActivity {
     RecyclerView recycler_review;
     @BindView(R.id.search_progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.direction)
+    LinearLayout directionButton;
+
+    DirectionBottomSheet directionBottomSheet;
 
     private CollectionViewModel collectionViewModel;
     @Inject
@@ -105,6 +110,13 @@ public class RestaurantDetails extends AppCompatActivity {
                 } else {
                     progressBar.setVisibility(View.GONE);
                 }
+            }
+        });
+        directionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directionBottomSheet = new DirectionBottomSheet(restaurantLocation.getLatitude(), restaurantLocation.getLongitude(), restaurantLocation.getAddress());
+                directionBottomSheet.show(getSupportFragmentManager(), directionBottomSheet.getTag());
             }
         });
     }
