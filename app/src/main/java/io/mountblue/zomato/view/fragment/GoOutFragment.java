@@ -21,8 +21,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.mountblue.zomato.MainActivity;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.CollectionAdapter;
+import io.mountblue.zomato.module.Restaurant_;
 import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.util.NetworkState;
 import io.mountblue.zomato.view.CollectionViewModel;
@@ -54,8 +56,8 @@ public class GoOutFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_go_out, container, false);
         ButterKnife.bind(this, view);
         collectionList = new ArrayList<>();
-        collectionViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CollectionViewModel.class);
-        collectionViewModel.getAllCollection().observe(this, new Observer<List<Collection>>() {
+            collectionViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CollectionViewModel.class);
+            collectionViewModel.getAllCollection().observe(this, new Observer<List<Collection>>() {
             @Override
             public void onChanged(List<Collection> collections) {
                 collectionList = collections;
@@ -70,6 +72,12 @@ public class GoOutFragment extends Fragment {
                 } else {
                     progressBar.setVisibility(View.GONE);
                 }
+            }
+        });
+        collectionViewModel.getRestaurant(getContext()).observe(this, new Observer<List<Restaurant_>>() {
+            @Override
+            public void onChanged(List<Restaurant_> restaurant_s) {
+                Log.e(TAG, "onChanged: " + restaurant_s.size());
             }
         });
 

@@ -6,6 +6,7 @@ import dagger.android.ContributesAndroidInjector;
 import io.mountblue.zomato.MainActivity;
 import io.mountblue.zomato.RestaurantDetails;
 import io.mountblue.zomato.di.bindViewModule.RestaurantViewModelsModule;
+import io.mountblue.zomato.view.fragment.BookmarkFragment;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
 
 @Module
@@ -23,6 +24,11 @@ public abstract class ActivityBuildersModule {
             modules = {RestaurantViewModelsModule.class,}
     )
     abstract RestaurantDetails getRestaurantReviews();
+
+    @ContributesAndroidInjector(
+            modules = {RestaurantViewModelsModule.class,}
+    )
+    abstract BookmarkFragment bookmarkFragment();
 
     @Provides
     static String someString() {

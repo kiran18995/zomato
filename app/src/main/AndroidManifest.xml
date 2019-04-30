@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.AddressActivity"></activity>
+        <activity android:name=".view.activity.BookmarkActivity"></activity>
         <activity
             android:name=".RestaurantDetails"
             android:label="@string/title_activity_restaurant_details"

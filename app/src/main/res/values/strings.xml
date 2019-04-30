@@ -15,6 +15,7 @@
     <string name="sub_text_gold">Choose what\'s right for you</string>
     <string name="title_gold">Because you want it!</string>
     <string name="bookmark">bookmark</string>
+    <string name="bookmarks">Bookmarks</string>
     <string name="address_not_found">Sorry, we couldn\'t find results</string>
     <string name="use_current_location">Use current location</string>
 </resources>

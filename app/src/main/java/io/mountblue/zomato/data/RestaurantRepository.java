@@ -123,13 +123,36 @@ public class RestaurantRepository {
         });
     }
 
-    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData() {
+    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData(Context context) {
+        restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
         appExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                restaurantMutableLiveData.setValue(restaurantLocalDatabase.restaurantDao().getBookmarkRestaurants());
+                restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkRestaurants());
             }
         });
         return restaurantMutableLiveData;
     }
+
+    public void removeBookmark(Context context, String id) {
+        restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                restaurantLocalDatabase.restaurantDao().removeBookmark(id);
+            }
+        });
+    }
+
+    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData(Context context, String id) {
+        restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkId(id));
+            }
+        });
+        return restaurantMutableLiveData;
+    }
+
 }

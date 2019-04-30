@@ -6,6 +6,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/address_linear_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -40,8 +41,8 @@
             android:id="@+id/address_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/circular_book"
             android:ellipsize="end"
+            android:fontFamily="@font/circular_book"
             android:maxLines="1"
             android:text="Home - Phase 1, JP Nagar"
             android:textColor="#1C1C1C"
@@ -64,10 +65,11 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_marginEnd="15dp"
+        android:id="@+id/image_bookmark"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center_vertical|right"
+        android:layout_marginEnd="15dp"
         android:src="@drawable/ic_bookmark" />
 
 </LinearLayout>

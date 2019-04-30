@@ -65,7 +65,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     .into(holder.restaurantImage);
         }
         Bundle bundle = new Bundle();
-        bundle.putParcelable("restaurant", restaurantList.get(position));
+        bundle.putParcelable("restaurant", restaurantList.get(position).getRestaurant());
         bundle.putParcelable("userRating", restaurantList.get(position).getRestaurant().getUserRating());
         bundle.putParcelable("location", restaurantList.get(position).getRestaurant().getLocation());
         holder.restaurantCard.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             holder.restaurantRate.setText(restaurantList.get(position).getRestaurant().getAverageCostForTwo().toString());
         }
         float distance = setEstimateTime(restaurantList.get(position).getRestaurant().getLocation().getLatitude()
-                ,restaurantList.get(position).getRestaurant().getLocation().getLongitude());
+                , restaurantList.get(position).getRestaurant().getLocation().getLongitude());
         holder.estimateTime.setText(getEstimateTimeRange(distance));
     }
 
@@ -127,20 +127,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         endPoint.setLatitude(Double.parseDouble(restaurantLat));
         endPoint.setLongitude(Double.parseDouble(restaurantLon));
 
-        return startPoint.distanceTo(endPoint)/1000;
+        return startPoint.distanceTo(endPoint) / 1000;
     }
 
     private String getEstimateTimeRange(float distance) {
         if (distance >= 10) {
             return "50-60 Mins";
-        }
-        else if (distance < 10 && distance >= 7 ) {
+        } else if (distance < 10 && distance >= 7) {
             return "40-50 Mins";
-        }
-        else if (distance < 7 && distance > 4 ) {
+        } else if (distance < 7 && distance > 4) {
             return "25-35 Mins";
-        }
-        else {
+        } else {
             return "15-25 Mins";
         }
     }

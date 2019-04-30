@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import io.mountblue.zomato.adapter.ReviewAdapter;
 import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
+import io.mountblue.zomato.module.Restaurant_;
 import io.mountblue.zomato.module.UserRating;
 import io.mountblue.zomato.module.reviewmodule.UserReview;
 import io.mountblue.zomato.util.NetworkState;
@@ -60,7 +61,7 @@ public class RestaurantDetails extends AppCompatActivity {
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
-    private Restaurant restaurant;
+    private Restaurant_ restaurant;
     private UserRating userRating;
     private Location restaurantLocation;
 
@@ -81,15 +82,15 @@ public class RestaurantDetails extends AppCompatActivity {
         restaurant = bundle.getParcelable("restaurant");
         userRating = bundle.getParcelable("userRating");
         restaurantLocation = bundle.getParcelable("location");
-        if (!restaurant.getRestaurant().getThumb().isEmpty()) {
-            Picasso.with(this).load(restaurant.getRestaurant().getThumb().replace(CROP_IMAGE, "")).placeholder(R.drawable.detail_placeholder).centerCrop().fit().into(backDrop);
+        if (!restaurant.getThumb().isEmpty()) {
+            Picasso.with(this).load(restaurant.getThumb().replace(CROP_IMAGE, "")).placeholder(R.drawable.detail_placeholder).centerCrop().fit().into(backDrop);
         }
-        restaurantTitle.setText(restaurant.getRestaurant().getName());
+        restaurantTitle.setText(restaurant.getName());
         averageRating.setText(userRating.getAggregateRating());
-        subTitle.setText(String.format("%s Places", restaurant.getRestaurant().getCuisines()));
+        subTitle.setText(String.format("%s Places", restaurant.getCuisines()));
         location.setText(restaurantLocation.getAddress());
         collectionViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CollectionViewModel.class);
-        collectionViewModel.getAllReview(Integer.parseInt(restaurant.getRestaurant().getId())).observe(this, new Observer<List<UserReview>>() {
+        collectionViewModel.getAllReview(Integer.parseInt(restaurant.getId())).observe(this, new Observer<List<UserReview>>() {
             @Override
             public void onChanged(List<UserReview> userReviews) {
                 Log.e(TAG, "onChanged: " + userReviews.size());
@@ -123,15 +124,33 @@ public class RestaurantDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home: {
                 finish();
                 break;
-            case R.id.action_share:
-                String url = restaurant.getRestaurant().getUrl();
+            }
+            case R.id.action_share: {
+                String url = restaurant.getUrl();
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_TEXT, url);
                 i.setType("text/plain");
                 startActivity(i);
+                break;
+            }
+            case R.id.action_bookmark: {
+                collectionViewModel.getRestaurant(RestaurantDetails.this,
+                        restaurant.getId())
+                        .observe(this, new Observer<List<Restaurant_>>() {
+                            @Override
+                            public void onChanged(List<Restaurant_> restaurant_s) {
+                                if (restaurant_s.size() > 0) {
+                                    collectionViewModel.removeBookmark(RestaurantDetails.this
+                                            , restaurant.getId());
+                                } else {
+                                    collectionViewModel.saveToBookmark(restaurant, RestaurantDetails.this);
+                                }
+                            }
+                        });
+            }
         }
         if (item.getItemId() == android.R.id.home) {
             finish();

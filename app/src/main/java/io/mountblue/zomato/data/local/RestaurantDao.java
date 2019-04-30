@@ -16,4 +16,10 @@ public interface RestaurantDao {
 
     @Query("SELECT * FROM restaurant")
     List<Restaurant_> getBookmarkRestaurants();
+
+    @Query("DELETE FROM restaurant Where id =:id")
+    void removeBookmark(String id);
+
+    @Query("SELECT * FROM restaurant Where id =:id")
+    List<Restaurant_> getBookmarkId(String id);
 }

@@ -29,7 +29,6 @@ import io.mountblue.zomato.util.SharedPrefrenceAddress;
 public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAdapter.RestaurantViewHolder> {
 
     private static final String TAG = "RestaurantAdapter";
-    // private List<Restaurant> restaurantList;
     private Context context;
 
     public RestaurantAdapter(Context context) {
@@ -37,13 +36,6 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
         this.context = context;
     }
 
-   /* public List<Restaurant> getRestaurantList() {
-        return restaurantList;
-    }
-
-    public void setRestaurantList(List<Restaurant> restaurantList) {
-        this.restaurantList = restaurantList;
-    }*/
 
     @NonNull
     @Override
@@ -56,7 +48,7 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("restaurant", getItem(position));
+        bundle.putParcelable("restaurant", getItem(position).getRestaurant());
         bundle.putParcelable("userRating", getItem(position).getRestaurant().getUserRating());
         bundle.putParcelable("location", getItem(position).getRestaurant().getLocation());
         holder.restaurantCard.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +74,7 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
             holder.restaurantRate.setText(getItem(position).getRestaurant().getAverageCostForTwo().toString());
         }
         float distance = setEstimateTime(getItem(position).getRestaurant().getLocation().getLatitude()
-                ,getItem(position).getRestaurant().getLocation().getLongitude());
+                , getItem(position).getRestaurant().getLocation().getLongitude());
         holder.estimateTime.setText(getEstimateTimeRange(distance));
     }
 

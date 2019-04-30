@@ -32,6 +32,7 @@ import io.mountblue.zomato.adapter.ViewPagerAdapter;
 import io.mountblue.zomato.util.NonSwipeableViewPager;
 import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.view.activity.AddressActivity;
+import io.mountblue.zomato.view.activity.BookmarkActivity;
 import io.mountblue.zomato.view.activity.SearchActivity;
 import io.mountblue.zomato.view.fragment.GoOutFragment;
 import io.mountblue.zomato.view.fragment.GoldFragment;
@@ -53,6 +54,8 @@ public class MainActivity extends DaggerAppCompatActivity {
     TextView addressHeading;
     @BindView(R.id.search_query)
     TextView searchQuery;
+    @BindView(R.id.address_linear_layout)
+    LinearLayout getLinearLayoutLocation;
     @BindView(R.id.layout_location)
     LinearLayout linearLayoutLocation;
     @BindView(R.id.layout_search)
@@ -61,6 +64,9 @@ public class MainActivity extends DaggerAppCompatActivity {
     LinearLayout searchView;
     @BindView(R.id.sort_by)
     ImageView sortBy;
+    @BindView(R.id.image_bookmark)
+    ImageView bookmarkImageView;
+
     private MenuItem prevMenuItem;
     private SharedPrefrenceAddress sharedPrefrenceAddress;
 
@@ -182,10 +188,17 @@ public class MainActivity extends DaggerAppCompatActivity {
             }
         });
 
+        bookmarkImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, BookmarkActivity.class));
+            }
+        });
+
         setCurrentAddress();
 
         setupViewPager(viewPager);
-        linearLayoutLocation.setOnClickListener(new View.OnClickListener() {
+        getLinearLayoutLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent addressIntent = new Intent(MainActivity.this, AddressActivity.class);

@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
-                    Toast.makeText(this,"Logged Out",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Logged Out", Toast.LENGTH_LONG).show();
                 });
     }
 
