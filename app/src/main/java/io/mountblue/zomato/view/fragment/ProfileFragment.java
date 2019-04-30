@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +55,13 @@ public class ProfileFragment extends Fragment {
                     .fit().centerCrop()
                     .into(profileImage);
         }
+
+        Fragment fragment = new BookmarkFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, fragment)
+                .commit();
+
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +78,7 @@ public class ProfileFragment extends Fragment {
                 .build();
         GoogleSignIn.getClient(getContext(), gso).signOut()
                 .addOnCompleteListener(getActivity(), task -> {
-                    Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_LONG).show();
                 });
         getActivity().finish();
         startActivity(new Intent(getActivity(), LoginActivity.class));
