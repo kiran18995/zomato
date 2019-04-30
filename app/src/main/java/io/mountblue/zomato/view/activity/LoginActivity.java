@@ -50,13 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                    Toast.makeText(this, "Logged Out", Toast.LENGTH_LONG).show();
-                });
-    }
-
     @Override
     protected void onStart() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -88,5 +81,11 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ApiException e) {
             Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
+    }
+
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 }
