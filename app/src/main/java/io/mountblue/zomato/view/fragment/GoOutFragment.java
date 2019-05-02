@@ -74,12 +74,7 @@ public class GoOutFragment extends Fragment {
                 }
             }
         });
-        collectionViewModel.getRestaurant(getContext()).observe(this, new Observer<List<Restaurant_>>() {
-            @Override
-            public void onChanged(List<Restaurant_> restaurant_s) {
-                Log.e(TAG, "onChanged: " + restaurant_s.size());
-            }
-        });
+
 
         return view;
     }

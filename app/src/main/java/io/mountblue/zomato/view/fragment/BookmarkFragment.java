@@ -25,6 +25,7 @@ import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.BookmarkAdapter;
 import io.mountblue.zomato.adapter.CollectionAdapter;
 import io.mountblue.zomato.adapter.SearchAdapter;
+import io.mountblue.zomato.data.local.RestaurantEntity;
 import io.mountblue.zomato.module.Restaurant_;
 import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.view.CollectionViewModel;
@@ -41,7 +42,7 @@ public class BookmarkFragment extends Fragment {
     @Inject
     ViewModelProviderFactory viewModelProviderFactory;
 
-    private List<Restaurant_> restaurantList;
+    private List<RestaurantEntity> restaurantList;
 
     public BookmarkFragment() {
     }
@@ -55,9 +56,9 @@ public class BookmarkFragment extends Fragment {
         ButterKnife.bind(this, view);
         restaurantList = new ArrayList<>();
         collectionViewModel = ViewModelProviders.of(this, viewModelProviderFactory).get(CollectionViewModel.class);
-        collectionViewModel.getRestaurant(getContext()).observe(this, new Observer<List<Restaurant_>>() {
+        collectionViewModel.getRestaurant(getContext()).observe(this, new Observer<List<RestaurantEntity>>() {
             @Override
-            public void onChanged(List<Restaurant_> restaurant_s) {
+            public void onChanged(List<RestaurantEntity> restaurant_s) {
                 restaurantList = restaurant_s;
                 getBookmark();
             }
@@ -66,7 +67,7 @@ public class BookmarkFragment extends Fragment {
     }
 
 
-    private void getBookmark() {
+    public void getBookmark() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setHasFixedSize(true);

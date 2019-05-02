@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.mountblue.zomato.adapter.ReviewAdapter;
+import io.mountblue.zomato.data.local.RestaurantEntity;
 import io.mountblue.zomato.module.Location;
 import io.mountblue.zomato.module.Restaurant;
 import io.mountblue.zomato.module.Restaurant_;
@@ -123,9 +124,9 @@ public class RestaurantDetails extends AppCompatActivity {
         });
         collectionViewModel.getRestaurant(RestaurantDetails.this,
                 restaurant.getId())
-                .observe(this, new Observer<List<Restaurant_>>() {
+                .observe(this, new Observer<List<RestaurantEntity>>() {
                     @Override
-                    public void onChanged(List<Restaurant_> restaurant_s) {
+                    public void onChanged(List<RestaurantEntity> restaurant_s) {
                         Log.e(TAG, "onChanged: " + restaurant_s.size());
                         isbookmarked = restaurant_s.size() > 0;
                     }
@@ -166,7 +167,16 @@ public class RestaurantDetails extends AppCompatActivity {
                             , restaurant.getId());
                     isbookmarked = false;
                 } else {
-                    collectionViewModel.saveToBookmark(restaurant, RestaurantDetails.this);
+                    RestaurantEntity restaurantEntity = new RestaurantEntity();
+                    Log.e(TAG, "onOptionsItemSelected: " + userRating.getAggregateRating());
+                    restaurantEntity.setId(restaurant.getId());
+                    restaurantEntity.setCuisines(restaurant.getCuisines());
+                    restaurantEntity.setName(restaurant.getName());
+                    restaurantEntity.setUrl(restaurant.getUrl());
+                    restaurantEntity.setAddress(restaurantLocation.getAddress());
+                    restaurantEntity.setThumb(restaurant.getThumb());
+                    restaurantEntity.setAggregateRating(userRating.getAggregateRating());
+                    collectionViewModel.saveToBookmark(restaurantEntity, RestaurantDetails.this);
                     isbookmarked = true;
                 }
             }

@@ -54,11 +54,11 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             @Override
             public void onClick(View v) {
                 SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
-                sharedPrefrenceAddress.setDefaultAddress("addressTitle",locationSuggestions.get(position).getTitle());
+                sharedPrefrenceAddress.setDefaultAddress("addressTitle", locationSuggestions.get(position).getTitle());
                 sharedPrefrenceAddress.setDefaultAddress("addressLatitude", String.valueOf(locationSuggestions.get(position).getLatitude()));
                 sharedPrefrenceAddress.setDefaultAddress("addressLongitude", String.valueOf(locationSuggestions.get(position).getLongitude()));
                 context.startActivity(new Intent(context, MainActivity.class));
-                ((Activity)context).finish();
+                ((Activity) context).finish();
             }
         });
     }

@@ -41,6 +41,12 @@ public class ProfileFragment extends Fragment {
     ImageView profileImage;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        createBookmarkFragment();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -56,11 +62,8 @@ public class ProfileFragment extends Fragment {
                     .into(profileImage);
         }
 
-        Fragment fragment = new BookmarkFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, fragment)
-                .commit();
+        createBookmarkFragment();
+
 
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +73,14 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void createBookmarkFragment() {
+        Fragment fragment = new BookmarkFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void signOut() {

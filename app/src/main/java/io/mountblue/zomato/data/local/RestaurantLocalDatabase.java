@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import io.mountblue.zomato.module.Restaurant_;
 
-@Database(entities = {Restaurant_.class}, version = 1)
+@Database(entities = {RestaurantEntity.class}, version = 2)
 public abstract class RestaurantLocalDatabase extends RoomDatabase {
 
     private static RestaurantLocalDatabase INSTANCE;

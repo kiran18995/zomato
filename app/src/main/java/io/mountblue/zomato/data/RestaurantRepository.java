@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 import io.mountblue.zomato.data.local.AppExecutors;
+import io.mountblue.zomato.data.local.RestaurantEntity;
 import io.mountblue.zomato.data.local.RestaurantLocalDatabase;
 import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
@@ -30,7 +31,7 @@ public class RestaurantRepository {
     private MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
     private AppExecutors appExecutors;
     private RestaurantLocalDatabase restaurantLocalDatabase;
-    private MutableLiveData<List<Restaurant_>> restaurantMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<RestaurantEntity>> restaurantMutableLiveData = new MutableLiveData<>();
 
     public RestaurantRepository() {
         appExecutors = AppExecutors.getInstance();
@@ -113,7 +114,7 @@ public class RestaurantRepository {
     }
 
 
-    public void saveMovie(Restaurant_ restaurant, Context context) {
+    public void saveMovie(RestaurantEntity restaurant, Context context) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
         appExecutors.diskIO().execute(new Runnable() {
             @Override
@@ -123,7 +124,7 @@ public class RestaurantRepository {
         });
     }
 
-    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData(Context context) {
+    public MutableLiveData<List<RestaurantEntity>> getRestaurantMutableLiveData(Context context) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
         appExecutors.diskIO().execute(new Runnable() {
             @Override
@@ -144,7 +145,7 @@ public class RestaurantRepository {
         });
     }
 
-    public MutableLiveData<List<Restaurant_>> getRestaurantMutableLiveData(Context context, String id) {
+    public MutableLiveData<List<RestaurantEntity>> getRestaurantMutableLiveData(Context context, String id) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
         appExecutors.diskIO().execute(new Runnable() {
             @Override

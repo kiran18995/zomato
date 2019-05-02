@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.mountblue.zomato.data.RestaurantRepository;
-import io.mountblue.zomato.module.Restaurant_;
+import io.mountblue.zomato.data.local.RestaurantEntity;
 import io.mountblue.zomato.module.gooutmodule.Collection;
 import io.mountblue.zomato.module.reviewmodule.UserReview;
 import io.mountblue.zomato.util.NetworkState;
@@ -22,7 +22,6 @@ public class CollectionViewModel extends ViewModel {
 
     @Inject
     public CollectionViewModel() {
-        Log.e("work", "work");
         restaurantRepository = new RestaurantRepository();
     }
 
@@ -38,11 +37,11 @@ public class CollectionViewModel extends ViewModel {
         return restaurantRepository.stateMutableLiveData();
     }
 
-    public LiveData<List<Restaurant_>> getRestaurant(Context context) {
+    public LiveData<List<RestaurantEntity>> getRestaurant(Context context) {
         return restaurantRepository.getRestaurantMutableLiveData(context);
     }
 
-    public void saveToBookmark(Restaurant_ restaurant, Context context) {
+    public void saveToBookmark(RestaurantEntity restaurant, Context context) {
         restaurantRepository.saveMovie(restaurant, context);
     }
 
@@ -50,7 +49,7 @@ public class CollectionViewModel extends ViewModel {
         restaurantRepository.removeBookmark(context, id);
     }
 
-    public LiveData<List<Restaurant_>> getRestaurant(Context context, String id) {
+    public LiveData<List<RestaurantEntity>> getRestaurant(Context context, String id) {
         return restaurantRepository.getRestaurantMutableLiveData(context, id);
     }
 

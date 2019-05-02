@@ -21,12 +21,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.mountblue.zomato.R;
 import io.mountblue.zomato.RoundedTransformation;
+import io.mountblue.zomato.data.local.RestaurantEntity;
 import io.mountblue.zomato.module.Restaurant_;
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder> {
     private static final String TAG = "BookmarkAdapter";
 
-    private List<Restaurant_> restaurant;
+    private List<RestaurantEntity> restaurant;
 
     private Context context;
 
@@ -34,11 +35,11 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         this.context = context;
     }
 
-    public List<Restaurant_> getRestaurant() {
+    public List<RestaurantEntity> getRestaurant() {
         return restaurant;
     }
 
-    public void setRestaurant(List<Restaurant_> restaurant) {
+    public void setRestaurant(List<RestaurantEntity> restaurant) {
         this.restaurant = restaurant;
     }
 
@@ -61,6 +62,9 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
                     .fit().centerCrop()
                     .into(holder.restaurantImage);
         }
+
+        holder.restaurantAddress.setText(restaurant.get(position).getAddress());
+        holder.restaurantRating.setText(restaurant.get(position).getAggregateRating());
         /*Bundle bundle = new Bundle();
         bundle.putParcelable("restaurant", restaurant);
         bundle.putParcelable("userRating", restaurant.getUserRating());
