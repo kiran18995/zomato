@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -116,9 +120,16 @@ public class AddressActivity extends AppCompatActivity {
         useCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CurrentLocation currentLocation = new CurrentLocation(AddressActivity.this);
-                currentLocation.setSharedPrefrenceAddress();
-                startActivity(new Intent(AddressActivity.this, MainActivity.class));
+                LocationManager mlocManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+                boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if(!enabled) {
+                    showDialogGPS();
+                }
+                else {
+                    CurrentLocation currentLocation = new CurrentLocation(AddressActivity.this);
+                    currentLocation.setSharedPrefrenceAddress();
+                    startActivity(new Intent(AddressActivity.this, MainActivity.class));
+                }
             }
         });
     }
@@ -178,6 +189,27 @@ public class AddressActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private void showDialogGPS() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddressActivity.this);
+        builder.setCancelable(false);
+        builder.setTitle("Enable GPS");
+        builder.setMessage("Please enable GPS");
+        builder.setInverseBackgroundForced(true);
+        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(
+                        new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+        builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

@@ -12,7 +12,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,6 +29,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class CurrentLocation {
     private static final String TAG = "Location";
     public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 100;
+    private static final double defaultLatitude = 12.9030888;
+    private static final double defaultLongitude = 77.6015197;
     private Context context;
 
     public CurrentLocation(Context context) {
@@ -42,6 +46,7 @@ public class CurrentLocation {
                 String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
                 ActivityCompat.requestPermissions((Activity) context, permissions, REQUEST_ID_ACCESS_COURSE_FINE_LOCATION);
             }
+
         }
         LocationManager mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         Location locationGPS = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -69,18 +74,16 @@ public class CurrentLocation {
         try {
             return getLastBestLocation().getLatitude();
         } catch (Exception e) {
-            e.printStackTrace();
+            return defaultLatitude;
         }
-        return 0;
     }
 
     public double getCurrentLongitude() {
         try {
             return getLastBestLocation().getLongitude();
         } catch (Exception e) {
-            e.printStackTrace();
+            return defaultLongitude;
         }
-        return 0;
     }
 
     public String getCurrentAddress() {
@@ -88,17 +91,10 @@ public class CurrentLocation {
         List<Address> addresses;
         geocoder = new Geocoder(context);
 
-        String provider = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        /*if (!provider.contains("gps")) { //if gps is disabled
-            Intent gpsOptionsIntent = new Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            context.startActivity(gpsOptionsIntent);
-        }*/
-
         try {
-            addresses = geocoder.getFromLocation(getCurrentLatitude(), getCurrentLongitude(), 5);
-            String address = addresses.get(0).getAddressLine(0);
-            return address;
+            addresses = geocoder.getFromLocation(getCurrentLatitude(), getCurrentLongitude(), 10);
+            String locality = addresses.get(0).getLocality();
+            return locality;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,10 +103,9 @@ public class CurrentLocation {
     }
 
     public void setSharedPrefrenceAddress() {
-        String[] addresses = getCurrentAddress().split(",");
-        String address = addresses[2] + ", " + addresses[3];
+        String locality = getCurrentAddress();
         SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
-        sharedPrefrenceAddress.setDefaultAddress("addressTitle", address.trim());
+        sharedPrefrenceAddress.setDefaultAddress("addressTitle", locality);
         sharedPrefrenceAddress.setDefaultAddress("addressLatitude", String.valueOf(getCurrentLatitude()));
         sharedPrefrenceAddress.setDefaultAddress("addressLongitude", String.valueOf(getCurrentLongitude()));
     }

@@ -1,7 +1,10 @@
 package io.mountblue.zomato;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.ViewPagerAdapter;
+import io.mountblue.zomato.data.local.AppExecutors;
 import io.mountblue.zomato.util.NonSwipeableViewPager;
 import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.view.activity.AddressActivity;
@@ -71,6 +77,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     private MenuItem prevMenuItem;
     private SharedPrefrenceAddress sharedPrefrenceAddress;
     private int activePagePosition = 0;
+    public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 100;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -163,8 +170,8 @@ public class MainActivity extends DaggerAppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         sharedPrefrenceAddress = new SharedPrefrenceAddress(getApplicationContext());
-        if (sharedPrefrenceAddress.getDefaultAddress("addressTitle") == null) {
-            CurrentLocation currentLocation = new CurrentLocation(this);
+        if (sharedPrefrenceAddress.getDefaultAddress("addressLatitude") == null) {
+            CurrentLocation currentLocation = new CurrentLocation(MainActivity.this);
             currentLocation.setSharedPrefrenceAddress();
         }
 
