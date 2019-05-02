@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
+    android:layout_margin="15dp"
     tools:context=".view.activity.BookmarkActivity">
 
     <LinearLayout
@@ -16,28 +16,29 @@
             android:id="@+id/back_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingTop="@dimen/padding_10"
-            android:paddingBottom="20dp"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_arrow_back"
+            android:layout_marginBottom="@dimen/padding_10"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/circular_bold"
-            android:paddingStart="12dp"
             android:text="@string/bookmarks"
             android:textColor="@color/black"
-            android:textSize="30dp" />
+            android:textSize="20sp" />
 
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/padding_10">
+            android:layout_height="match_parent">
 
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/padding_10" />
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class BookmarkFragment extends Fragment {
 
     @BindView(R.id.restaurantList)
     RecyclerView recyclerView;
+    @BindView(R.id.bookmark_placeholder)
+    LinearLayout bookmarkPlaceholder;
 
     private CollectionViewModel collectionViewModel;
 
@@ -60,14 +63,20 @@ public class BookmarkFragment extends Fragment {
             @Override
             public void onChanged(List<RestaurantEntity> restaurant_s) {
                 restaurantList = restaurant_s;
-                getBookmark();
+                if (restaurantList.size() > 0){
+                    bookmarkPlaceholder.setVisibility(View.GONE);
+                    getBookmark();
+                }else {
+                    bookmarkPlaceholder.setVisibility(View.VISIBLE);
+                    getBookmark();
+                }
             }
         });
         return view;
     }
 
 
-    public void getBookmark() {
+    private void getBookmark() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setHasFixedSize(true);

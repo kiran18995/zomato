@@ -19,6 +19,7 @@ import io.mountblue.zomato.R;
 public class GoldFragment extends Fragment {
     @BindView(R.id.scratch_text)
     TextView scratchText;
+
     public GoldFragment() {
     }
 
@@ -27,7 +28,7 @@ public class GoldFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_gold, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         scratchText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 

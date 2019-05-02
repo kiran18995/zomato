@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +42,10 @@ public class DirectionBottomSheet extends BottomSheetDialogFragment {
     TextView locationAddress;
     @BindView(R.id.get_location)
     LinearLayout getLocation;
+    @BindView(R.id.close_bottomsheet)
+    ImageView closeBottomSheet;
     String address;
-    Double lat,lon;
+    Double lat, lon;
 
     public DirectionBottomSheet(String lat, String lon, String address) {
         this.lat = Double.parseDouble(lat);
@@ -64,7 +67,7 @@ public class DirectionBottomSheet extends BottomSheetDialogFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        latLng = new LatLng(lat,lon);
+        latLng = new LatLng(lat, lon);
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("MissingPermission")
             @Override
@@ -79,7 +82,7 @@ public class DirectionBottomSheet extends BottomSheetDialogFragment {
                 googleMap.addMarker(new MarkerOptions().position(latLng).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(12).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
@@ -92,6 +95,12 @@ public class DirectionBottomSheet extends BottomSheetDialogFragment {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 intent.setPackage("com.google.android.apps.maps");
                 startActivity(intent);
+            }
+        });
+        closeBottomSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDestroyView();
             }
         });
         return rootView;

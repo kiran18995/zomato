@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/food_zomato" />
+        android:src="@drawable/login_image" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,45 +18,44 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="15dp"
-            android:layout_weight="3" >
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <View
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <ImageView
-                android:layout_marginTop="30dp"
-                android:src="@drawable/zomato_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp" />
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:src="@drawable/zomato_logo" />
 
             <TextView
-                android:layout_marginTop="15dp"
-                android:text="think food think zomato"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="@string/zomato_tag_line"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <View
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="0dp"
+                android:layout_weight="2" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/background_black"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <LinearLayout
@@ -88,31 +87,31 @@
                     android:layout_marginStart="15dp"
                     android:fontFamily="@font/circular_bold"
                     android:gravity="center_vertical"
-                    android:text="Continue with Google"
+                    android:text="@string/continue_with_google"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/skip_login"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/circular_book"
-                    android:text="I'll log in later"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/circular_book"
+                    android:text="@string/login_later"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
                 <View
-                    android:background="@drawable/white_dotted_line"
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"/>
+                    android:layout_height="3dp"
+                    android:background="@drawable/white_dotted_line" />
 
             </LinearLayout>
 

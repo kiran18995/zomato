@@ -93,7 +93,6 @@ public class OrderFragment extends Fragment {
         return view;
     }
 
-
     private void setRecyclerView() {
         restaurantAdapter = new RestaurantAdapter(getContext());
         restaurantAdapter.submitList(restaurantPagedList);
@@ -105,6 +104,12 @@ public class OrderFragment extends Fragment {
     public void onResume() {
         super.onResume();
         shimmerFrameLayout.startShimmerAnimation();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Override

@@ -3,7 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-
     <string name="hello_blank_fragment">Working Under construction</string>
     <string name="order">ORDER</string>
     <string name="go_out">GO OUT</string>
@@ -20,4 +19,12 @@
     <string name="map">Map</string>
     <string name="address">Address</string>
     <string name="use_current_location">Use current location</string>
+    <string name="zomato_tag_line">think food think zomato</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="login_later">I\'ll log in later</string>
+    <string name="profile">PROFILE</string>
+    <string name="no_bookmark_text">You haven\'t bookmarked any restaurants yet.</string>
+    <string name="profile_name">Profile name</string>
+    <string name="email">Email</string>
+    <string name="log_out">Log out</string>
 </resources>

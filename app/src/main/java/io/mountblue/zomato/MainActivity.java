@@ -66,7 +66,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     @BindView(R.id.sort_by)
     ImageView sortBy;
     @BindView(R.id.image_bookmark)
-    ImageView bookmarkImageView;
+    LinearLayout bookmarkImageView;
 
     private MenuItem prevMenuItem;
     private SharedPrefrenceAddress sharedPrefrenceAddress;
