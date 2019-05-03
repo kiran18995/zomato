@@ -1,11 +1,7 @@
 package io.mountblue.zomato;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -14,15 +10,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,7 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.mountblue.zomato.adapter.ViewPagerAdapter;
-import io.mountblue.zomato.data.local.AppExecutors;
 import io.mountblue.zomato.util.NonSwipeableViewPager;
 import io.mountblue.zomato.util.SharedPrefrenceAddress;
 import io.mountblue.zomato.view.activity.AddressActivity;
@@ -50,6 +42,8 @@ import io.mountblue.zomato.view.fragment.SearchFragment;
 
 public class MainActivity extends DaggerAppCompatActivity {
     private static final String TAG = "MainActivity";
+    public static final int TRANSLATION_Y = 150;
+    public static final int ZERO = 0;
 
 
     @BindView(R.id.view_pager)
@@ -171,7 +165,7 @@ public class MainActivity extends DaggerAppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         sharedPrefrenceAddress = new SharedPrefrenceAddress(getApplicationContext());
-        if (sharedPrefrenceAddress.getDefaultAddress("addressLatitude") == null) {
+        if (sharedPrefrenceAddress.getDefaultAddress(getString(R.string.address_latitude)) == null) {
             CurrentLocation currentLocation = new CurrentLocation(MainActivity.this);
             currentLocation.setSharedPrefrenceAddress();
         }
@@ -197,8 +191,8 @@ public class MainActivity extends DaggerAppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("addressHeading", addressHeading.getText());
-                intent.putExtra("deliveryAddress", deliveryAddress.getText());
+                intent.putExtra(getString(R.string.address_heading), addressHeading.getText());
+                intent.putExtra(getString(R.string.delivery_address), deliveryAddress.getText());
                 startActivity(intent);
             }
         });
@@ -231,10 +225,10 @@ public class MainActivity extends DaggerAppCompatActivity {
         viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
             @Override
             public void transformPage(@NonNull View page, float position) {
-                if (viewPager.getCurrentItem() == 0) {
-                    page.setTranslationY(150);
+                if (viewPager.getCurrentItem() == ZERO) {
+                    page.setTranslationY(TRANSLATION_Y);
                 } else {
-                    page.setTranslationY(0);
+                    page.setTranslationY(ZERO);
                 }
             }
         });

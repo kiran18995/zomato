@@ -63,6 +63,7 @@ public class RestaurantDetails extends AppCompatActivity {
     LinearLayout directionButton;
 
     DirectionBottomSheet directionBottomSheet;
+    Menu menu;
 
     private CollectionViewModel collectionViewModel;
     @Inject
@@ -141,7 +142,14 @@ public class RestaurantDetails extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_restaurant_details, menu);
+        if(isbookmarked){
+            menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
+        }
+        else {
+            menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
+        }
         return true;
     }
 
@@ -165,8 +173,10 @@ public class RestaurantDetails extends AppCompatActivity {
                 if (isbookmarked) {
                     collectionViewModel.removeBookmark(RestaurantDetails.this
                             , restaurant.getId());
+                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_border_black_24dp);
                     isbookmarked = false;
                 } else {
+                    menu.getItem(0).setIcon(R.drawable.ic_bookmark_black_24dp);
                     RestaurantEntity restaurantEntity = new RestaurantEntity();
                     Log.e(TAG, "onOptionsItemSelected: " + userRating.getAggregateRating());
                     restaurantEntity.setId(restaurant.getId());

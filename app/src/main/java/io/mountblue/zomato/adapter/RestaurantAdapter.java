@@ -119,13 +119,13 @@ public class RestaurantAdapter extends PagedListAdapter<Restaurant, RestaurantAd
 
     private String getEstimateTimeRange(float distance) {
         if (distance >= 10) {
-            return "50-60 Mins";
+            return context.getString(R.string.fifty_to_sixty);
         } else if (distance < 10 && distance >= 7) {
-            return "40-50 Mins";
+            return context.getString(R.string.fourty_to_fifty);
         } else if (distance < 7 && distance > 4) {
-            return "25-35 Mins";
+            return context.getString(R.string.twentyfive_to_thirtyfive);
         } else {
-            return "15-25 Mins";
+            return context.getString(R.string.fifteen_to_twentyfive);
         }
     }
 

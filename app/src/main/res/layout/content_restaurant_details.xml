@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/zero"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -27,11 +27,11 @@
                 <TextView
                     android:id="@+id/restaurant_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/zero"
                     android:layout_weight="1"
                     android:fontFamily="@font/circular_bold"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/extra_large" />
 
                 <TextView
                     android:id="@+id/sub_title"
@@ -46,17 +46,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rating_background"
                 android:fontFamily="@font/circular_bold"
-                android:text="4.1"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:text="@string/rating_text"
+                android:textColor="@color/white"
+                android:textSize="@dimen/medium_large" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="@dimen/one"
+            android:layout_marginTop="@dimen/ten"
+            android:layout_marginBottom="@dimen/ten"
             android:background="@android:color/darker_gray" />
 
         <TextView
@@ -68,9 +68,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="@dimen/one"
+            android:layout_marginTop="@dimen/ten"
+            android:layout_marginBottom="@dimen/ten"
             android:background="@android:color/darker_gray" />
 
         <LinearLayout
@@ -79,29 +79,29 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="@dimen/sixteen"
+                android:layout_height="@dimen/sixteen"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_direction" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_10"
-                android:gravity=""
+                android:layout_marginStart="@dimen/ten"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/circular_book"
-                    android:text="Directions"
+                    android:text="@string/directions"
                     android:textColor="@color/grey"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/medium_large" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="@dimen/two"
                     android:background="@drawable/dotted_line_green" />
 
             </LinearLayout>
@@ -110,17 +110,17 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="@dimen/one"
+            android:layout_marginTop="@dimen/ten"
+            android:layout_marginBottom="@dimen/ten"
             android:background="@android:color/darker_gray" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="@dimen/fifteen"
             android:fontFamily="@font/circular_medium"
-            android:text="Highlighted Reviews"
+            android:text="@string/highlighted_reviews"
             android:textColor="@color/black" />
 
         <androidx.recyclerview.widget.RecyclerView

@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/circular_bold"
-                android:paddingBottom="@dimen/padding_10"
+                android:paddingBottom="@dimen/ten"
                 android:text="@string/profile_name"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/circular_book"
-                android:paddingBottom="@dimen/padding_10"
+                android:paddingBottom="@dimen/ten"
                 android:text="@string/email"
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
@@ -76,7 +76,7 @@
         android:layout_marginBottom="60dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="@dimen/padding_10">
+        android:padding="@dimen/ten">
 
         <TextView
             android:layout_width="match_parent"
@@ -90,35 +90,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <LinearLayout
-                android:id="@+id/bookmark_placeholder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/padding_10"
-                    android:src="@drawable/ic_bookmark_placeholder" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/circular_book"
-                    android:text="@string/no_bookmark_text"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/padding_10" />
+                android:layout_marginBottom="@dimen/ten"
+                android:layout_marginTop="@dimen/ten" />
 
         </RelativeLayout>
 

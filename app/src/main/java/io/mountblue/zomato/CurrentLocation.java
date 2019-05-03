@@ -105,8 +105,8 @@ public class CurrentLocation {
     public void setSharedPrefrenceAddress() {
         String locality = getCurrentAddress();
         SharedPrefrenceAddress sharedPrefrenceAddress = new SharedPrefrenceAddress(context);
-        sharedPrefrenceAddress.setDefaultAddress("addressTitle", locality);
-        sharedPrefrenceAddress.setDefaultAddress("addressLatitude", String.valueOf(getCurrentLatitude()));
-        sharedPrefrenceAddress.setDefaultAddress("addressLongitude", String.valueOf(getCurrentLongitude()));
+        sharedPrefrenceAddress.setDefaultAddress(context.getString(R.string.address_title), locality);
+        sharedPrefrenceAddress.setDefaultAddress(context.getString(R.string.address_latitude), String.valueOf(getCurrentLatitude()));
+        sharedPrefrenceAddress.setDefaultAddress(context.getString(R.string.address_longitude), String.valueOf(getCurrentLongitude()));
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,16 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="3dp"
+        android:elevation="@dimen/three"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/back"
-            android:paddingLeft="5dp"
-            android:background="@color/locationSurface"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_arrow_back"/>
+            android:background="@color/locationSurface"
+            android:paddingLeft="@dimen/five"
+            android:src="@drawable/ic_arrow_back" />
+
         <include layout="@layout/layout_location" />
 
     </LinearLayout>
@@ -29,7 +29,6 @@
     <FrameLayout
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </FrameLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

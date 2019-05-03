@@ -90,7 +90,7 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 typedText.setText("");
                 typedText.clearFocus();
-                searchClose.setVisibility(View.GONE);
+                searchClose.setVisibility(View.INVISIBLE);
                 restaurantList.clear();
                 searchAdapter.notifyDataSetChanged();
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
@@ -145,7 +145,7 @@ public class SearchFragment extends Fragment {
             public void onNext(RestaurantResponse restaurants) {
                 Log.e(TAG, "onNext: " + restaurants.getRestaurants().size());
                 if (restaurants.getRestaurants().size() > 0) {
-                    noResultMessage.setVisibility(View.GONE);
+                    noResultMessage.setVisibility(View.INVISIBLE);
                 } else {
                     noResultMessage.setVisibility(View.VISIBLE);
                 }
@@ -155,7 +155,7 @@ public class SearchFragment extends Fragment {
                 searchAdapter.setRestaurantList(restaurantList);
                 restaurantRecyclerView.setAdapter(searchAdapter);
                 searchAdapter.notifyDataSetChanged();
-                searchProgressBar.setVisibility(View.GONE);
+                searchProgressBar.setVisibility(View.INVISIBLE);
                 if (typedText.hasFocus()) {
                     searchClose.setVisibility(View.VISIBLE);
                 }
@@ -183,7 +183,7 @@ public class SearchFragment extends Fragment {
                     if (typedText.hasFocus()) {
                         searchProgressBar.setVisibility(View.VISIBLE);
                     }
-                    searchClose.setVisibility(View.GONE);
+                    searchClose.setVisibility(View.INVISIBLE);
                 }
             }
 

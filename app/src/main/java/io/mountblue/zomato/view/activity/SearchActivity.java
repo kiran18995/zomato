@@ -36,8 +36,8 @@ public class SearchActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        deliveryAddress.setText(intent.getStringExtra("deliveryAddress"));
-        addressHeading.setText(intent.getStringExtra("addressHeading"));
+        deliveryAddress.setText(intent.getStringExtra(getString(R.string.address_heading)));
+        addressHeading.setText(intent.getStringExtra(getString(R.string.delivery_address)));
 
         Fragment fragment = new SearchFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();

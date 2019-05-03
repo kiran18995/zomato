@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,40 +18,40 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/zero"
             android:layout_weight="3"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:padding="@dimen/fifteen">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/zero"
                 android:layout_weight="1" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/fifty"
                 android:src="@drawable/zomato_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/fifteen"
                 android:text="@string/zomato_tag_line"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="@dimen/large" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/zero"
                 android:layout_weight="2" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/zero"
             android:layout_weight="1"
             android:background="@drawable/background_black"
             android:gravity="center_vertical"
@@ -62,34 +61,34 @@
                 android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="@dimen/fifteen"
                 android:background="@drawable/login_button"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/padding_10">
+                android:padding="@dimen/ten">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="@dimen/padding_10"
+                    android:layout_width="@dimen/twenty"
+                    android:layout_height="@dimen/twenty"
+                    android:layout_marginStart="@dimen/ten"
                     android:src="@drawable/ic_google_filled" />
 
                 <View
-                    android:layout_width="2dp"
+                    android:layout_width="@dimen/two"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
-                    android:background="#BA2818"
-                    android:src="#BA2818" />
+                    android:layout_marginStart="@dimen/fifteen"
+                    android:background="@color/dark_red"
+                    android:src="@color/dark_red" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/fifteen"
                     android:fontFamily="@font/circular_bold"
                     android:gravity="center_vertical"
                     android:text="@string/continue_with_google"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/large" />
 
             </LinearLayout>
 
@@ -106,11 +105,11 @@
                     android:fontFamily="@font/circular_book"
                     android:text="@string/login_later"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/medium_large" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="3dp"
+                    android:layout_height="@dimen/three"
                     android:background="@drawable/white_dotted_line" />
 
             </LinearLayout>

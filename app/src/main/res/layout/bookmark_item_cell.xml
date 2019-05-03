@@ -12,14 +12,16 @@
 
         <ImageView
             android:id="@+id/main_image"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/padding_10"
+            android:layout_marginRight="@dimen/ten"
+            android:layout_marginLeft="@dimen/ten"
             android:layout_weight="1"
-            android:src="@drawable/food_placeholder" />
+            android:src="@drawable/food_placeholder"
+            android:contentDescription="@string/image_search" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:orientation="vertical">
@@ -31,26 +33,27 @@
 
                 <TextView
                     android:id="@+id/restaurant_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/zero"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="@dimen/three"
+                    android:layout_marginBottom="@dimen/three"
                     android:layout_weight="1"
                     android:fontFamily="@font/circular_bold"
-                    android:text="Xo Belgain Waffle"
+                    android:text="@string/xo_belgain_waffle"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/sixteen_text" />
 
                 <TextView
                     android:id="@+id/restaurant_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="@dimen/four"
+                    android:layout_marginRight="@dimen/four"
                     android:background="@drawable/rating_background"
-                    android:text="4.1"
+                    android:text="@string/rating_text"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/thirteen_textsize" />
             </LinearLayout>
 
             <TextView
@@ -60,19 +63,19 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/circular_book"
                 android:maxLines="1"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:text="Jp Nagar, Bangalore"
+                android:paddingTop="@dimen/three"
+                android:paddingBottom="@dimen/three"
+                android:text="@string/restaurant_address"
                 android:textColor="@color/grey"
-                android:textSize="12sp" />
+                android:textSize="@dimen/medium" />
         </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginTop="@dimen/padding_10"
-        android:layout_marginBottom="@dimen/padding_10"
+        android:layout_marginTop="@dimen/ten"
+        android:layout_marginBottom="@dimen/ten"
         android:background="@color/circleborder" />
 </LinearLayout>
 

@@ -27,6 +27,7 @@
                 android:src="@drawable/search_icon" />
 
             <EditText
+                android:imeOptions="actionDone"
                 android:id="@+id/search_on_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,6 +35,7 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/circular_book"
                 android:hint="Search for restaurants, dishes..."
+                android:maxEms="1"
                 android:maxLines="1"
                 android:padding="10dp"
                 android:textSize="14sp" />
@@ -46,7 +48,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/search_close"
@@ -56,7 +58,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:src="@drawable/ic_close"
-            android:visibility="gone" />
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <View
@@ -92,9 +94,9 @@
                 android:fontFamily="@font/circular_book"
                 android:paddingTop="7dp"
                 android:paddingBottom="5dp"
-                android:text="No results found"
+                android:text="@string/no_results_found"
                 android:textColor="@color/grey"
-                android:textSize="8sp" />
+                android:textSize="12sp" />
 
             <View
                 android:layout_width="match_parent"

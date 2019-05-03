@@ -13,4 +13,9 @@
     <color name="review_rating">#5BA829</color>
     <color name="background">#dddddd</color>
     <color name="theme">#E23744</color>
+    <color name="line">#EFEFEF</color>
+    <color name="dark_red">#BA2818</color>
+    <color name="starter_pack">#1C1C1C</color>
+    <color name="gold_card_subtext">#1C1C1C</color>
+    <color name="gold_unlocks">#5D5D67</color>
 </resources>
