@@ -35,7 +35,7 @@ import io.mountblue.zomato.viewmodel.ViewModelProviderFactory;
 
 public class BookmarkFragment extends Fragment {
 
-    @BindView(R.id.restaurantList)
+    @BindView(R.id.restaurantList_bookmark)
     RecyclerView recyclerView;
     @BindView(R.id.bookmark_placeholder)
     LinearLayout bookmarkPlaceholder;
