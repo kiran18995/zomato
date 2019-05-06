@@ -89,6 +89,7 @@ public class RestaurantRepository {
 
             @Override
             public void onNext(Review review) {
+                if (review.getUserReviews() == null) return;
                 Log.e(TAG, "onResponse: " + review.getUserReviews().size());
                 userReviewLiveData.setValue(review.getUserReviews());
                 networkState.postValue(NetworkState.LOADED);

@@ -1,9 +1,19 @@
 package io.mountblue.zomato;
 
+import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertNotEquals;
+
 import android.content.ComponentName;
 import android.os.SystemClock;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.RecyclerViewActions;
@@ -16,24 +26,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.mountblue.zomato.view.activity.SearchActivity;
-import io.mountblue.zomato.view.fragment.SearchFragment;
-
-import static androidx.test.InstrumentationRegistry.getTargetContext;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.clearText;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertNotEquals;
 
 public class MainActivityTest {
 
@@ -51,12 +43,6 @@ public class MainActivityTest {
         mActivity.getSupportFragmentManager().beginTransaction();
         searchActivity = searchActivityRule.getActivity();
     }
-
-    /*@Test
-    public void isMainActivityLaunched() {
-        SystemClock.sleep(2000);
-        intended(hasComponent(MainActivity.class.getName()));
-    }*/
 
     @Test
     public void searchAddress() {

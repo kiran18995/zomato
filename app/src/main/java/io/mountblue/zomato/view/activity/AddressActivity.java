@@ -1,9 +1,5 @@
 package io.mountblue.zomato.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
@@ -32,7 +32,6 @@ import io.mountblue.zomato.R;
 import io.mountblue.zomato.adapter.AddressAdapter;
 import io.mountblue.zomato.data.remote.retrofit.ApiClient;
 import io.mountblue.zomato.data.remote.retrofit.RestaurantService;
-import io.mountblue.zomato.module.RestaurantResponse;
 import io.mountblue.zomato.module.suggestion.LocationSuggestion;
 import io.mountblue.zomato.module.suggestion.LocationSuggestions;
 import io.reactivex.Single;
@@ -46,6 +45,9 @@ import io.reactivex.subjects.PublishSubject;
 
 public class AddressActivity extends AppCompatActivity {
 
+    private static final String TAG = "AddressActivity";
+    private final CompositeDisposable disposable = new CompositeDisposable();
+    private final PublishSubject<String> publishSubject = PublishSubject.create();
     @BindView(R.id.location_query)
     EditText locationQuery;
     @BindView(R.id.location_suggestions)
@@ -56,12 +58,8 @@ public class AddressActivity extends AppCompatActivity {
     ImageView back;
     @BindView(R.id.address_not_found)
     TextView addressNotFound;
-
-    private static final String TAG = "AddressActivity";
-    private CompositeDisposable disposable = new CompositeDisposable();
-    private PublishSubject<String> publishSubject = PublishSubject.create();
-    private RestaurantService apiService;
     List<LocationSuggestion> locationSuggestionList;
+    private RestaurantService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,22 +77,18 @@ public class AddressActivity extends AppCompatActivity {
 
         disposable.add(publishSubject.debounce(300, TimeUnit.MICROSECONDS)
                 .distinctUntilChanged()
-                .switchMapSingle(new Function<String, Single<LocationSuggestions>>() {
-                    @Override
-                    public Single<LocationSuggestions> apply(String s) throws Exception {
-                        if (s.length() > 0) {
-                            return apiService.getAddressSuggestions(10, s)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread());
-                        }
-                        else {
-                            return new Single<LocationSuggestions>() {
-                                @Override
-                                protected void subscribeActual(SingleObserver<? super LocationSuggestions> observer) {
+                .switchMapSingle((Function<String, Single<LocationSuggestions>>) s -> {
+                    if (s.length() > 0) {
+                        return apiService.getAddressSuggestions(10, s)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread());
+                    } else {
+                        return new Single<LocationSuggestions>() {
+                            @Override
+                            protected void subscribeActual(SingleObserver<? super LocationSuggestions> observer1) {
 
-                                }
-                            };
-                        }
+                            }
+                        };
                     }
                 })
                 .subscribeWith(observer));
@@ -110,26 +104,17 @@ public class AddressActivity extends AppCompatActivity {
 
         publishSubject.onNext("");
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        back.setOnClickListener(v -> onBackPressed());
 
-        useCurrentLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LocationManager mlocManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-                boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                if(!enabled) {
-                    showDialogGPS();
-                }
-                else {
-                    CurrentLocation currentLocation = new CurrentLocation(AddressActivity.this);
-                    currentLocation.setSharedPrefrenceAddress();
-                    startActivity(new Intent(AddressActivity.this, MainActivity.class));
-                }
+        useCurrentLocation.setOnClickListener(v -> {
+            LocationManager mlocManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!enabled) {
+                showDialogGPS();
+            } else {
+                CurrentLocation currentLocation = new CurrentLocation(AddressActivity.this);
+                currentLocation.setSharedPrefrenceAddress();
+                startActivity(new Intent(AddressActivity.this, MainActivity.class));
             }
         });
     }
@@ -138,12 +123,11 @@ public class AddressActivity extends AppCompatActivity {
         return new DisposableObserver<LocationSuggestions>() {
             @Override
             public void onNext(LocationSuggestions locationSuggestions) {
-                Log.e(TAG, "onNext: "+locationSuggestions.getLocationSuggestions().size());
+                Log.e(TAG, "onNext: " + locationSuggestions.getLocationSuggestions().size());
                 if (locationSuggestions.getLocationSuggestions().size() > 0) {
                     locationSuggestionsRecyclerView.setVisibility(View.VISIBLE);
                     addressNotFound.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     addressNotFound.setVisibility(View.VISIBLE);
                     locationSuggestionsRecyclerView.setVisibility(View.GONE);
                 }
