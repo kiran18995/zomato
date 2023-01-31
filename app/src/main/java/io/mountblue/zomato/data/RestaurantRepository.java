@@ -26,12 +26,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RestaurantRepository {
     private static final String TAG = "RestaurantRepository";
-    private MutableLiveData<List<Collection>> mutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<UserReview>> userReviewLiveData = new MutableLiveData<>();
-    private MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
-    private AppExecutors appExecutors;
+    private final MutableLiveData<List<Collection>> mutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<UserReview>> userReviewLiveData = new MutableLiveData<>();
+    private final MutableLiveData<NetworkState> networkState = new MutableLiveData<>();
+    private final AppExecutors appExecutors;
     private RestaurantLocalDatabase restaurantLocalDatabase;
-    private MutableLiveData<List<RestaurantEntity>> restaurantMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<RestaurantEntity>> restaurantMutableLiveData = new MutableLiveData<>();
 
     public RestaurantRepository() {
         appExecutors = AppExecutors.getInstance();
@@ -89,6 +89,7 @@ public class RestaurantRepository {
 
             @Override
             public void onNext(Review review) {
+                if (review.getUserReviews() == null) return;
                 Log.e(TAG, "onResponse: " + review.getUserReviews().size());
                 userReviewLiveData.setValue(review.getUserReviews());
                 networkState.postValue(NetworkState.LOADED);
@@ -116,43 +117,23 @@ public class RestaurantRepository {
 
     public void saveMovie(RestaurantEntity restaurant, Context context) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                restaurantLocalDatabase.restaurantDao().insertRestaurant(restaurant);
-            }
-        });
+        appExecutors.diskIO().execute(() -> restaurantLocalDatabase.restaurantDao().insertRestaurant(restaurant));
     }
 
     public MutableLiveData<List<RestaurantEntity>> getRestaurantMutableLiveData(Context context) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkRestaurants());
-            }
-        });
+        appExecutors.diskIO().execute(() -> restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkRestaurants()));
         return restaurantMutableLiveData;
     }
 
     public void removeBookmark(Context context, String id) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                restaurantLocalDatabase.restaurantDao().removeBookmark(id);
-            }
-        });
+        appExecutors.diskIO().execute(() -> restaurantLocalDatabase.restaurantDao().removeBookmark(id));
     }
 
     public MutableLiveData<List<RestaurantEntity>> getRestaurantMutableLiveData(Context context, String id) {
         restaurantLocalDatabase = RestaurantLocalDatabase.getInstance(context);
-        appExecutors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkId(id));
-            }
-        });
+        appExecutors.diskIO().execute(() -> restaurantMutableLiveData.postValue(restaurantLocalDatabase.restaurantDao().getBookmarkId(id)));
         return restaurantMutableLiveData;
     }
 

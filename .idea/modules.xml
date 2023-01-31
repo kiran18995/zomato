@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/zomato.iml" filepath="$PROJECT_DIR$/zomato.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zomato.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zomato.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zomato.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zomato.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zomato.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zomato.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zomato.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zomato.app.unitTest.iml" />
     </modules>
   </component>
 </project>
