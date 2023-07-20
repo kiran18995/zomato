@@ -1,7 +1,6 @@
 package io.mountblue.zomato.view;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
